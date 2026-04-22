@@ -7,11 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* تخصيص شريط التمرير */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
-        /* أنيميشن لظهور الرسائل */
         .msg-fade-in { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -25,7 +23,7 @@
         </div>
         <div class="p-4 flex-1 overflow-y-auto">
             <p class="text-sm text-gray-500 mb-2">المحادثات السابقة</p>
-            </div>
+        </div>
     </div>
 
     <div class="flex-1 flex flex-col relative h-full w-full">
@@ -34,14 +32,15 @@
             <button onclick="toggleSidebar()" class="text-gray-600 p-2 md:hidden">
                 <i class="fas fa-bars"></i>
             </button>
-            <div class="hidden md:block w-8"></div> <div class="relative">
+            <div class="hidden md:block w-8"></div>
+
+            <div class="relative">
                 <button onclick="toggleModelMenu()" class="flex items-center gap-2 font-bold text-lg hover:bg-gray-100 px-3 py-1.5 rounded-xl transition">
                     <span id="current-model-name">Afnan Flow</span>
                     <i class="fas fa-chevron-down text-xs text-gray-500"></i>
                 </button>
 
                 <div id="model-menu" class="hidden absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 shadow-xl rounded-2xl w-72 p-2 z-50">
-                    
                     <div onclick="selectModel('afnan_flow', 'Afnan Flow')" class="cursor-pointer p-3 rounded-xl hover:bg-gray-50 flex items-start gap-3 border-b border-gray-50 last:border-0">
                         <div class="bg-black text-white rounded-full w-8 h-8 flex items-center justify-center shrink-0 mt-1"><i class="fas fa-network-wired text-sm"></i></div>
                         <div>
@@ -85,13 +84,10 @@
 
         <div class="absolute bottom-0 w-full bg-gradient-to-t from-white via-white to-transparent p-4 md:px-20 lg:px-40">
             <div class="relative flex items-center bg-gray-100 rounded-3xl p-1 shadow-sm border border-gray-200">
-                
                 <button class="p-3 text-gray-400 hover:text-black transition">
                     <i class="fas fa-plus"></i>
                 </button>
-                
                 <input type="text" id="user-input" placeholder="اكتب رسالتك..." class="flex-1 bg-transparent border-none outline-none px-2 py-3 text-gray-800" onkeypress="handleKeyPress(event)">
-                
                 <button id="send-btn" onclick="sendMessage()" class="bg-black text-white rounded-full w-10 h-10 flex items-center justify-center ml-1 hover:bg-gray-800 transition">
                     <i class="fas fa-arrow-up"></i>
                 </button>
@@ -105,22 +101,17 @@
     <div id="overlay" onclick="closeAllMenus()" class="hidden fixed inset-0 z-40 bg-black bg-opacity-10 md:hidden"></div>
 
     <script>
-        // إعدادات النظام
         let currentMode = 'afnan_flow';
         const API_URL = 'https://am-brown.vercel.app/api/chat';
-        const API_PASSWORD = 'mQ7xZp4Lr8tVbN1sH3yC5uD6eG0'; // كلمة السر الخاصة بك
+        const API_PASSWORD = 'mQ7xZp4Lr8tVbN1sH3yC5uD6eG0';
 
-        // دوال الواجهة (UI Functions)
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('translate-x-full');
-            overlay.classList.toggle('hidden');
+            document.getElementById('sidebar').classList.toggle('translate-x-full');
+            document.getElementById('overlay').classList.toggle('hidden');
         }
 
         function toggleModelMenu() {
-            const menu = document.getElementById('model-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('model-menu').classList.toggle('hidden');
         }
 
         function closeAllMenus() {
@@ -132,13 +123,10 @@
         function selectModel(modeValue, modeName) {
             currentMode = modeValue;
             document.getElementById('current-model-name').innerText = modeName;
-            
-            // تحديث علامة الصح (Checkmark)
             ['afnan_flow', 'afnan_fast', 'afnan_auto'].forEach(id => {
                 document.getElementById(`check-${id}`).classList.add('hidden');
             });
             document.getElementById(`check-${modeValue}`).classList.remove('hidden');
-            
             toggleModelMenu();
         }
 
@@ -152,18 +140,12 @@
         }
 
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
+            if (event.key === 'Enter') sendMessage();
         }
 
-        // إضافة رسالة للواجهة
         function appendMessage(role, text, id = null) {
             const chatBox = document.getElementById('chat-box');
-            // إزالة رسالة الترحيب إذا كانت موجودة
-            if(chatBox.innerHTML.includes('fa-robot text-4xl')) {
-                chatBox.innerHTML = '';
-            }
+            if(chatBox.innerHTML.includes('fa-robot text-4xl')) chatBox.innerHTML = '';
 
             const msgDiv = document.createElement('div');
             msgDiv.className = `flex mb-6 msg-fade-in ${role === 'user' ? 'justify-end' : 'justify-start'}`;
@@ -184,28 +166,24 @@
             return msgDiv;
         }
 
-        // إرسال الطلب واستقباله بنظام Stream
         async function sendMessage() {
             const inputEl = document.getElementById('user-input');
             const message = inputEl.value.trim();
             if (!message) return;
 
-            // 1. عرض رسالة المستخدم
             appendMessage('user', message);
             inputEl.value = '';
             
-            // 2. تجهيز مكان لرسالة البوت
             const botMsgId = 'bot-msg-' + Date.now();
             appendMessage('bot', '<i class="fas fa-circle-notch fa-spin text-gray-400"></i> يفكر...', botMsgId);
             const botMsgContent = document.querySelector(`#${botMsgId} .content`);
 
             try {
-                // إرسال الـ API Request
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${API_PASSWORD}` // تمرير كلمة السر في الهيدر (يمكن تغييرها للـ body إذا كان خادمك يتطلب ذلك)
+                        'X-Custom-Api-Key': API_PASSWORD // التعديل الأهم هنا
                     },
                     body: JSON.stringify({
                         message: message,
@@ -215,12 +193,13 @@
                     })
                 });
 
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
-                // قراءة الـ Stream
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder("utf-8");
-                botMsgContent.innerHTML = ''; // مسح علامة التحميل
+                botMsgContent.innerHTML = ''; 
                 
                 let isFirstChunk = true;
 
@@ -228,17 +207,18 @@
                     const { done, value } = await reader.read();
                     if (done) break;
                     
-                    const chunk = decoder.decode(value, { stream: true });
+                    let chunk = decoder.decode(value, { stream: true });
                     
-                    // تنظيف النص في حال كان الباك إند يرسل البيانات بصيغة SSE (مثلاً: data: "text"\n\n)
-                    // إذا كان الباك إند يرسل نصاً خاماً، سيتم عرضه مباشرة
+                    // معالجة البيانات القادمة من الباك إند
                     let textToAppend = chunk;
-                    if(chunk.startsWith('data: ')) {
+                    if(chunk.includes('data: ')) {
+                        // تنظيف علامة data: إذا كان البث بنظام SSE
+                        textToAppend = chunk.replace(/data:\s*/g, '');
                         try {
-                            const parsed = JSON.parse(chunk.replace('data: ', ''));
-                            textToAppend = parsed.text || parsed.message || chunk;
+                            const parsed = JSON.parse(textToAppend);
+                            textToAppend = parsed.text || parsed.message || textToAppend;
                         } catch(e) {
-                            textToAppend = chunk.replace('data: ', '');
+                            // تجاهل الخطأ إذا لم يكن JSON
                         }
                     }
 
@@ -249,14 +229,12 @@
                         botMsgContent.innerHTML += textToAppend;
                     }
                     
-                    // تمرير الشاشة للأسفل مع كل تحديث
-                    const chatBox = document.getElementById('chat-box');
-                    chatBox.scrollTop = chatBox.scrollHeight;
+                    document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
                 }
 
             } catch (error) {
                 console.error('Error:', error);
-                botMsgContent.innerHTML = `<span class="text-red-500">حدث خطأ في الاتصال بالخادم. تأكد من إعدادات CORS أو أن الرابط صحيح.</span>`;
+                botMsgContent.innerHTML = `<span class="text-red-500">حدث خطأ في الاتصال بالخادم. تأكد من إعدادات CORS أو أن الرابط صحيح.</span><br><span class="text-xs text-gray-400">${error.message}</span>`;
             }
         }
     </script>
