@@ -2,237 +2,535 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afnan AI v3.0</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Afnan AI</title>
+    <!-- استدعاء خط عربي أنيق لتطابق التصميم -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
-        .msg-fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body class="bg-white text-gray-900 h-screen flex overflow-hidden">
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --gray-light: #f4f4f4;
+            --gray-medium: #d4d4d4;
+            --gray-text: #999999;
+        }
 
-    <div id="sidebar" class="bg-gray-50 w-72 border-l border-gray-200 flex flex-col transition-all duration-300 absolute md:relative z-30 h-full transform translate-x-full md:translate-x-0">
-        <div class="p-5 border-b border-gray-200 flex justify-between items-center bg-white">
-            <h2 class="font-bold text-xl tracking-tight">Afnan AI</h2>
-            <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-black"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="p-4 flex-1 overflow-y-auto">
-            <div class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-4">السجل</div>
-            <div class="text-sm text-gray-400 italic">لا يوجد محادثات حالياً</div>
-        </div>
-    </div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
 
-    <div class="flex-1 flex flex-col relative w-full bg-white">
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: transparent;
+        }
+
+        .login-btn {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            padding: 8px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .menu-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .menu-line {
+            height: 2px;
+            background-color: #000;
+            border-radius: 2px;
+        }
+
+        .menu-line.long { width: 20px; }
+        .menu-line.short { width: 14px; }
+
+        /* Main Chat Area */
+        .main-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #messagesContainer {
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+            z-index: 2;
+        }
+
+        /* Hide empty state automatically when messages are added */
+        #messagesContainer:not(:empty) + #emptyState {
+            display: none;
+        }
+
+        /* Empty State Styles */
+        .empty-state {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .empty-state .logo {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 12px;
+            color: var(--gray-medium);
+        }
+
+        .empty-state h1 {
+            color: var(--gray-medium);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Input Area Styles */
+        .input-area {
+            padding: 10px 20px 24px;
+            background-color: var(--bg-color);
+            z-index: 3;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background-color: var(--gray-light);
+            border-radius: 999px;
+            padding: 8px 8px 8px 16px;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-text);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        #chatInput {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 15px;
+            color: #000;
+        }
+
+        #chatInput::placeholder {
+            color: var(--gray-text);
+        }
+
+        .send-btn {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
         
-        <header class="flex justify-between items-center px-4 py-3 border-b border-gray-50 bg-white/80 backdrop-blur-md sticky top-0 z-20">
-            <button onclick="toggleSidebar()" class="text-gray-500 p-2 md:hidden hover:bg-gray-100 rounded-lg">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="hidden md:block w-10"></div>
-
-            <div class="relative">
-                <button onclick="toggleModelMenu()" class="flex items-center gap-2 font-bold text-lg hover:bg-gray-100 px-4 py-2 rounded-2xl transition-all">
-                    <span id="current-model-name">Afnan Flow</span>
-                    <i class="fas fa-chevron-down text-[10px] text-gray-400"></i>
-                </button>
-
-                <div id="model-menu" class="hidden absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 shadow-2xl rounded-3xl w-80 p-2 z-50 animate-in fade-in zoom-in duration-200">
-                    
-                    <div onclick="selectModel('afnan_flow', 'Afnan Flow')" class="cursor-pointer p-4 rounded-2xl hover:bg-gray-50 flex items-start gap-4 border-b border-gray-50">
-                        <div class="bg-black text-white rounded-full w-9 h-9 flex items-center justify-center shrink-0 mt-1 shadow-lg"><i class="fas fa-network-wired text-sm"></i></div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold text-gray-900">Flow</h3>
-                                <i id="check-afnan_flow" class="fas fa-check-circle text-black"></i>
-                            </div>
-                            <p class="text-xs text-gray-500 leading-relaxed">Afnan ai Multi-agent system (خبير)</p>
-                        </div>
-                    </div>
-
-                    <div onclick="selectModel('afnan_fast', 'Afnan Fast')" class="cursor-pointer p-4 rounded-2xl hover:bg-gray-50 flex items-start gap-4 border-b border-gray-50">
-                        <div class="bg-gray-100 text-gray-600 rounded-full w-9 h-9 flex items-center justify-center shrink-0 mt-1"><i class="fas fa-bolt text-sm"></i></div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold text-gray-900">Fast</h3>
-                                <i id="check-afnan_fast" class="fas fa-check-circle text-black hidden"></i>
-                            </div>
-                            <p class="text-xs text-gray-500 leading-relaxed">استجابة سريعة جداً للمهام البسيطة</p>
-                        </div>
-                    </div>
-
-                    <div onclick="selectModel('afnan_auto', 'Afnan Auto')" class="cursor-pointer p-4 rounded-2xl hover:bg-gray-50 flex items-start gap-4">
-                        <div class="bg-gray-100 text-gray-600 rounded-full w-9 h-9 flex items-center justify-center shrink-0 mt-1"><i class="fas fa-magic text-sm"></i></div>
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold text-gray-900">Auto</h3>
-                                <i id="check-afnan_auto" class="fas fa-check-circle text-black hidden"></i>
-                            </div>
-                            <p class="text-xs text-gray-500 leading-relaxed">يختار النموذج الأنسب تلقائياً</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="location.reload()" title="محادثة جديدة وتحديث" class="text-gray-500 hover:bg-gray-100 p-2.5 rounded-xl transition-all">
-                <i class="fas fa-rotate-right text-lg"></i>
-            </button>
-        </header>
-
-        <div id="chat-box" class="flex-1 overflow-y-auto p-4 md:px-24 lg:px-64 pb-40">
-            <div class="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
-                <i class="fas fa-feather-pointed text-5xl"></i>
-                <p class="text-lg font-medium">ابدأ حواراً ذكياً مع Afnan Flow</p>
-            </div>
-        </div>
-
-        <div class="absolute bottom-0 w-full bg-gradient-to-t from-white via-white to-transparent pt-10 pb-6 px-4 md:px-24 lg:px-64">
-            <div class="relative flex items-center bg-gray-50 rounded-[2rem] p-1.5 shadow-sm border border-gray-200 focus-within:border-gray-400 transition-all">
-                <button class="p-3 text-gray-400 hover:text-black transition">
-                    <i class="fas fa-paperclip"></i>
-                </button>
-                <input type="text" id="user-input" placeholder="كيف يمكنني مساعدتك اليوم؟" class="flex-1 bg-transparent border-none outline-none px-3 py-3 text-[16px]" onkeypress="if(event.key === 'Enter') sendMessage()">
-                <button id="send-btn" onclick="sendMessage()" class="bg-black text-white rounded-full w-11 h-11 flex items-center justify-center ml-1 hover:scale-105 active:scale-95 transition-all">
-                    <i class="fas fa-arrow-up"></i>
-                </button>
-            </div>
-            <div class="flex justify-center items-center gap-2 mt-3">
-                <span class="text-[10px] font-bold text-gray-400 tracking-widest uppercase">Max ❀ Afnan AI v3.0</span>
-            </div>
-        </div>
-    </div>
-
-    <div id="overlay" onclick="closeAllMenus()" class="hidden fixed inset-0 z-20 bg-black/10 backdrop-blur-sm md:hidden"></div>
-
-    <script>
-        let currentMode = 'afnan_flow';
-        const API_URL = 'https://am-brown.vercel.app/api/chat';
-        const API_PASSWORD = 'mQ7xZp4Lr8tVbN1sH3yC5uD6eG0';
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('translate-x-full');
-            document.getElementById('overlay').classList.toggle('hidden');
+        .send-btn:disabled {
+            background-color: var(--gray-medium);
+            cursor: not-allowed;
         }
 
-        function toggleModelMenu() {
-            document.getElementById('model-menu').classList.toggle('hidden');
+        .send-btn svg {
+            width: 18px;
+            height: 18px;
         }
 
-        function closeAllMenus() {
-            document.getElementById('sidebar').classList.add('translate-x-full');
-            document.getElementById('model-menu').classList.add('hidden');
-            document.getElementById('overlay').classList.add('hidden');
+        /* Messages Styling (For JS Dynamic Classes) */
+        .message {
+            display: flex;
+            width: 100%;
+            margin-bottom: 24px;
         }
 
-        function selectModel(modeValue, modeName) {
-            currentMode = modeValue;
-            document.getElementById('current-model-name').innerText = modeName;
-            ['afnan_flow', 'afnan_fast', 'afnan_auto'].forEach(id => {
-                document.getElementById(`check-${id}`).classList.add('hidden');
-            });
-            document.getElementById(`check-${modeValue}`).classList.remove('hidden');
-            toggleModelMenu();
+        .message.user {
+            justify-content: flex-start; /* RTL: Aligns to the right */
         }
 
-        function appendMessage(role, text, id = null) {
-            const chatBox = document.getElementById('chat-box');
-            if(chatBox.querySelector('.opacity-40')) chatBox.innerHTML = '';
-
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `flex mb-8 msg-fade-in ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            if(id) msgDiv.id = id;
-
-            const bubbleClass = role === 'user' 
-                ? 'bg-gray-100 text-gray-800 px-6 py-3.5 rounded-[1.8rem] rounded-bl-md max-w-[85%] shadow-sm' 
-                : 'text-gray-900 px-2 py-3 w-full';
-
-            msgDiv.innerHTML = `
-                <div class="${bubbleClass}">
-                    ${role === 'bot' ? `<div class="flex items-center gap-2 mb-2 text-xs font-bold text-gray-400 uppercase tracking-tighter"><i class="fas fa-robot"></i> ${document.getElementById('current-model-name').innerText}</div>` : ''}
-                    <div class="content whitespace-pre-wrap leading-[1.7] text-[16px]">${text}</div>
-                </div>
-            `;
-            chatBox.appendChild(msgDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return msgDiv;
+        .message.assistant {
+            justify-content: flex-end; /* RTL: Aligns to the left */
         }
 
-        async function sendMessage() {
-            const inputEl = document.getElementById('user-input');
-            const message = inputEl.value.trim();
-            if (!message) return;
+        .message-content {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
 
-            appendMessage('user', message);
-            inputEl.value = '';
-            
-            const botMsgId = 'bot-msg-' + Date.now();
-            appendMessage('bot', '<i class="fas fa-circle-notch fa-spin text-gray-300"></i>', botMsgId);
-            const botMsgContent = document.querySelector(`#${botMsgId} .content`);
+        .message.user .message-content {
+            background-color: var(--gray-light);
+            color: var(--text-color);
+            border-top-right-radius: 4px;
+        }
 
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Custom-Api-Key': API_PASSWORD
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        mode: currentMode,
-                        use_search: "auto",
-                        stream: true
-                    })
-                });
+        .message.assistant .message-content {
+            background-color: transparent;
+            color: var(--text-color);
+            padding: 10px 0;
+        }
 
-                if (!response.ok) throw new Error(`Status: ${response.status}`);
+        /* Loading Dots Animation */
+        .loading .message-content {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            height: 24px;
+        }
 
-                const reader = response.body.getReader();
-                const decoder = new TextDecoder("utf-8");
-                let fullText = "";
-                botMsgContent.innerHTML = ""; 
+        .loading-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--gray-medium);
+            border-radius: 50%;
+            animation: pulse 1.4s infinite ease-in-out both;
+        }
 
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    
-                    const chunk = decoder.decode(value, { stream: true });
-                    const lines = chunk.split('\n');
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
 
-                    for (let line of lines) {
-                        let trimmedLine = line.trim();
-                        if (!trimmedLine || trimmedLine === 'data: [DONE]') continue;
-
-                        if (trimmedLine.startsWith('data: ')) {
-                            try {
-                                const jsonStr = trimmedLine.replace('data: ', '');
-                                const parsed = JSON.parse(jsonStr);
-                                // استهداف حقل content من v3.0
-                                if (parsed.content) {
-                                    fullText += parsed.content;
-                                    botMsgContent.innerText = fullText; 
-                                }
-                            } catch (e) {
-                                // في حال أرسل السيرفر نصاً خاماً بدون JSON
-                                let rawText = trimmedLine.replace('data: ', '');
-                                if (rawText) {
-                                    fullText += rawText;
-                                    botMsgContent.innerText = fullText;
-                                }
-                            }
-                        }
-                    }
-                    document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
-                }
-
-            } catch (error) {
-                botMsgContent.innerHTML = `<span class="text-red-400 text-sm">عذراً، حدث خطأ في الاتصال. جرب التحديث.</span>`;
+        @keyframes pulse {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Mobile Adjustments */
+        @media (max-width: 480px) {
+            .message-content {
+                max-width: 90%;
             }
         }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <button class="login-btn">تسجيل الدخول</button>
+        <button class="menu-btn">
+            <div class="menu-line long"></div>
+            <div class="menu-line short"></div>
+        </button>
+    </header>
+
+    <!-- Main Chat Area -->
+    <div class="main-wrapper">
+        <div id="messagesContainer"></div>
+        
+        <!-- Empty State (Hidden automatically by CSS when messages are added) -->
+        <div id="emptyState" class="empty-state">
+            <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <!-- Custom infinity style logo matching the image -->
+                <path d="M8 8a4 4 0 1 0 0 8 4 4 0 1 0 0-8zm12 0a4 4 0 1 0 0 8 4 4 0 1 0 0-8zm-8 4h.01"/>
+                <path d="M12 12c-2-2-2-2-4-4"/>
+                <path d="M12 12c2-2 2-2 4-4"/>
+            </svg>
+            <h1>Afnan ai</h1>
+        </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="input-area">
+        <div class="input-wrapper">
+            <!-- Plus Icon (Right side in RTL) -->
+            <button class="icon-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+
+            <!-- Text Input -->
+            <input type="text" id="chatInput" placeholder="اسأل Afnan ai..." autocomplete="off">
+
+            <!-- Github Icon -->
+            <button class="icon-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+            </button>
+
+            <!-- Send Button -->
+            <button id="sendBtn" class="send-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== YOUR EXACT JAVASCRIPT CODE - NO CHANGES ===== -->
+    <script>
+// Configuration
+const BACKEND_URL = 'https://am-brown.vercel.app';
+const API_ENDPOINT = `${BACKEND_URL}/api/index`;
+
+// DOM Elements
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
+const messagesContainer = document.getElementById('messagesContainer');
+
+// State
+let isLoading = false;
+let messageHistory = [];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    chatInput.addEventListener('keypress', handleKeyPress);
+    sendBtn.addEventListener('click', sendMessage);
+});
+
+// Handle Enter key
+function handleKeyPress(e) {
+    if (e.key === 'Enter' && !e.shiftKey && !isLoading) {
+        e.preventDefault();
+        sendMessage();
+    }
+}
+
+// Send message
+async function sendMessage() {
+    const message = chatInput.value.trim();
+    
+    if (!message || isLoading) return;
+
+    // Disable input
+    isLoading = true;
+    sendBtn.disabled = true;
+    chatInput.disabled = true;
+
+    // Add user message to UI
+    addMessageToUI(message, 'user');
+    messageHistory.push({ role: 'user', content: message });
+
+    // Clear input
+    chatInput.value = '';
+
+    // Show loading indicator
+    const loadingMessageId = addLoadingMessage();
+
+    try {
+        // Prepare request
+        const requestBody = {
+            model: 'afnanpro',
+            messages: messageHistory
+        };
+
+        // Send request with streaming
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Origin': window.location.origin
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        // Remove loading message
+        removeLoadingMessage(loadingMessageId);
+
+        // Process streaming response
+        await processStreamingResponse(response);
+
+    } catch (error) {
+        console.error('Error:', error);
+        removeLoadingMessage(loadingMessageId);
+        addMessageToUI(`خطأ: ${error.message}`, 'assistant');
+    } finally {
+        // Re-enable input
+        isLoading = false;
+        sendBtn.disabled = false;
+        chatInput.disabled = false;
+        chatInput.focus();
+    }
+}
+
+// Process streaming response (SSE format)
+async function processStreamingResponse(response) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullMessage = '';
+    let currentMessageElement = null;
+
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+                if (!line.trim()) continue;
+
+                // Parse SSE format
+                if (line.startsWith('data: ')) {
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        
+                        // Extract token from OpenAI-compatible format
+                        if (data.choices && data.choices[0] && data.choices[0].delta) {
+                            const delta = data.choices[0].delta;
+                            
+                            if (delta.content) {
+                                fullMessage += delta.content;
+                                
+                                // Create or update message element
+                                if (!currentMessageElement) {
+                                    currentMessageElement = addMessageToUI('', 'assistant');
+                                }
+                                
+                                // Update message content
+                                const contentElement = currentMessageElement.querySelector('.message-content');
+                                contentElement.textContent = fullMessage;
+                                
+                                // Auto-scroll to bottom
+                                scrollToBottom();
+                            }
+                        }
+                    } catch (e) {
+                        // Ignore JSON parse errors for non-JSON lines
+                    }
+                }
+            }
+        }
+
+        // Add final message to history
+        if (fullMessage) {
+            messageHistory.push({ role: 'assistant', content: fullMessage });
+        }
+
+    } catch (error) {
+        console.error('Streaming error:', error);
+        throw error;
+    }
+}
+
+// Add message to UI
+function addMessageToUI(content, role) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${role}`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    contentDiv.textContent = content;
+    
+    messageDiv.appendChild(contentDiv);
+    messagesContainer.appendChild(messageDiv);
+    
+    scrollToBottom();
+    return messageDiv;
+}
+
+// Add loading indicator
+function addLoadingMessage() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message assistant loading';
+    messageDiv.id = `loading-${Date.now()}`;
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'message-content';
+    
+    for (let i = 0; i < 3; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'loading-dot';
+        contentDiv.appendChild(dot);
+    }
+    
+    messageDiv.appendChild(contentDiv);
+    messagesContainer.appendChild(messageDiv);
+    
+    scrollToBottom();
+    return messageDiv.id;
+}
+
+// Remove loading message
+function removeLoadingMessage(id) {
+    const element = document.getElementById(id);
+    if (element) {
+        element.remove();
+    }
+}
+
+// Scroll to bottom
+function scrollToBottom() {
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Handle errors gracefully
+window.addEventListener('error', (e) => {
+    console.error('Global error:', e.error);
+});
+
+// Prevent accidental page unload during message sending
+window.addEventListener('beforeunload', (e) => {
+    if (isLoading) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
     </script>
 </body>
 </html>
