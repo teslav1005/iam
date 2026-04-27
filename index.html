@@ -162,7 +162,7 @@
                     يرجى تسجيل الدخول أولاً لتفعيل خدمة الوكيل المخصص. هل تريد المتابعة؟
                 </p>
                 <div class="flex flex-col gap-3">
-                    <button onclick="window.location.href='login.html'" class="w-full bg-black text-white font-bold py-4 rounded-2xl active:scale-95 transition-transform">نعم، تسجيل الدخول</button>
+                    <button id="goToLogin" class="w-full bg-black text-white font-bold py-4 rounded-2xl active:scale-95 transition-transform">نعم، تسجيل الدخول</button>
                     <button onclick="hideLoginPrompt()" class="w-full bg-transparent text-gray-500 font-bold py-3 rounded-2xl active:scale-95 transition-transform">لا، ليس الآن</button>
                 </div>
             </div>
@@ -170,26 +170,32 @@
 
     </div>
 
-    <script>
-        function openModal() {
+    <script type="module">
+        import { navigateTo } from './router.js';
+        
+        window.openModal = function() {
             document.getElementById('modalOverlay').classList.remove('opacity-0', 'pointer-events-none');
             document.getElementById('bottomSheet').classList.remove('translate-y-full');
         }
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('modalOverlay').classList.add('opacity-0', 'pointer-events-none');
             document.getElementById('bottomSheet').classList.add('translate-y-full');
             hideLoginPrompt();
         }
-        function showLoginPrompt() {
+        window.showLoginPrompt = function() {
             const prompt = document.getElementById('loginPrompt');
             prompt.classList.remove('opacity-0', 'pointer-events-none', 'scale-90');
             prompt.classList.add('opacity-100', 'scale-100');
         }
-        function hideLoginPrompt() {
+        window.hideLoginPrompt = function() {
             const prompt = document.getElementById('loginPrompt');
             prompt.classList.add('opacity-0', 'pointer-events-none', 'scale-90');
             prompt.classList.remove('opacity-100', 'scale-100');
         }
+        
+        document.getElementById('goToLogin').addEventListener('click', () => {
+            navigateTo('login');
+        });
     </script>
 </body>
 </html>

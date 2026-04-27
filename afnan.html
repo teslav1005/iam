@@ -8,80 +8,21 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
-        
-        body {
-            font-family: 'Noto Sans Arabic', sans-serif;
-            background-color: #f9fafb;
-            color: #111827;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .page:not(.active) {
-            display: none !important;
-        }
-
-        .page.active {
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card-faded {
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02);
-            border: 1px solid #f3f4f6;
-            margin-bottom: 1rem;
-            transition: all 0.3s;
-        }
-
-        .menu-row {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            cursor: pointer;
-        }
-
+        body { font-family: 'Noto Sans Arabic', sans-serif; background-color: #f9fafb; color: #111827; -webkit-tap-highlight-color: transparent; }
+        .page:not(.active) { display: none !important; }
+        .page.active { animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card-faded { background: white; border-radius: 28px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); border: 1px solid #f3f4f6; margin-bottom: 1rem; transition: all 0.3s; }
+        .menu-row { display: flex; align-items: center; padding: 16px 20px; cursor: pointer; }
         .menu-row:active { background-color: #f9fafb; }
-
-        .icon-wrapper {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 15px;
-            flex-shrink: 0;
-        }
-
+        .icon-wrapper { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-left: 15px; flex-shrink: 0; }
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; margin-bottom: 10px; font-size: 0.95rem; }
         .bot-msg { background: #e5e7eb; color: #374151; border-bottom-right-radius: 4px; align-self: flex-start; }
         .user-msg { background: #2563eb; color: white; border-bottom-left-radius: 4px; align-self: flex-end; }
-
-        .btn-gradient {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-
-        .qr-scanner-bg {
-            background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%);
-        }
-
-        .badge-popular {
-            background: #fbbf24;
-            color: #78350f;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            position: absolute;
-            top: -12px;
-            right: 20px;
-        }
+        .btn-gradient { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .qr-scanner-bg { background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%); }
+        .badge-popular { background: #fbbf24; color: #78350f; padding: 4px 12px; border-radius: 999px; font-size: 0.7rem; font-weight: 800; position: absolute; top: -12px; right: 20px; }
+        .glass-modal { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.3); }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-white lg:bg-gray-50">
@@ -100,7 +41,6 @@
         </header>
 
         <main class="p-5 pb-10">
-            <!-- الملف الشخصي -->
             <div class="flex flex-col items-center mb-8">
                 <div class="relative">
                     <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gray-100">
@@ -108,10 +48,9 @@
                     </div>
                 </div>
                 <h2 id="user-name" class="mt-4 text-xl font-bold text-gray-900">جاري التحميل...</h2>
-                <p id="user-email" class="text-gray-400 text-xs font-medium">...</p>
+                <p id="user-email" class="text-gray-400 text-[10px] font-medium">...</p>
             </div>
 
-            <!-- لوحة الرصيد -->
             <div class="grid grid-cols-2 gap-4 mb-8">
                 <div class="card-faded p-5 flex flex-col items-center">
                     <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">رصيدك</span>
@@ -126,7 +65,6 @@
                 </div>
             </div>
 
-            <!-- الروابط -->
             <div class="space-y-4">
                 <div class="card-faded overflow-hidden">
                     <div class="menu-row" onclick="showPage('profile-page')">
@@ -160,42 +98,42 @@
                 </div>
 
                 <div class="card-faded overflow-hidden">
-                    <div class="menu-row" onclick="showPage('privacy-page')">
-                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="shield-check"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">سياسة الخصوصية</span>
-                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
-                    </div>
-                    <div class="menu-row border-t border-gray-50" onclick="showPage('terms-page')">
-                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="file-text"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">اتفاقية المستخدم</span>
-                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    <div class="menu-row" onclick="window.open('https://wa.me/201015186799', '_blank')">
+                        <div class="icon-wrapper bg-green-50 text-green-600"><i data-lucide="phone"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">خدمة العملاء (واتساب)</span>
+                        <i data-lucide="external-link" class="w-4 h-4 text-gray-300"></i>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- صفحة المهام (جديد) -->
-    <div id="tasks-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
+    <!-- صفحة QR -->
+    <div id="qr-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">المهام</span>
+            <span class="flex-grow text-center font-bold">ربط المنصة</span>
             <div class="w-6"></div>
         </header>
-        <div class="p-5">
-            <div class="mb-8">
-                <h3 class="text-sm font-black text-gray-400 uppercase mb-4">المهام (قيد التنفيذ)</h3>
-                <div id="pending-tasks-list" class="space-y-3">
-                    <!-- المهام قيد التنفيذ هنا -->
-                </div>
+        <main class="p-8 flex flex-col items-center">
+            <div class="w-full grid grid-cols-2 gap-4 mb-8">
+                <button onclick="generateQR('whatsapp')" class="p-4 border-2 border-blue-500 rounded-2xl flex flex-col items-center gap-2 bg-blue-50">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-10 h-10">
+                    <span class="text-xs font-bold">WhatsApp</span>
+                </button>
+                <button class="p-4 border border-gray-100 rounded-2xl flex flex-col items-center gap-2 opacity-50 cursor-not-allowed">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" class="w-10 h-10">
+                    <span class="text-xs font-bold">Telegram</span>
+                </button>
             </div>
-            <div>
-                <h3 class="text-sm font-black text-gray-400 uppercase mb-4">المنجز</h3>
-                <div id="completed-tasks-list" class="space-y-3">
-                    <!-- المهام المنجزة هنا -->
+            <div id="qr-container" class="hidden flex flex-col items-center">
+                <div class="p-6 bg-white rounded-[40px] shadow-2xl border-8 border-gray-50 mb-6">
+                    <img src="" id="qr-image" class="w-56 h-56">
                 </div>
+                <p class="text-xs font-bold text-blue-600 mb-6">تحديث الكود خلال: <span id="qr-timer">60</span> ثانية</p>
+                <button class="w-full py-4 bg-green-600 text-white font-black rounded-2xl shadow-xl active:scale-95 transition">بدء الاتصال</button>
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- صفحة Chat AI -->
@@ -219,219 +157,28 @@
         </div>
     </div>
 
-    <!-- صفحة الإشعارات -->
-    <div id="notifications-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">الإشعارات</span>
-            <div class="w-6"></div>
-        </header>
-        <div id="notifications-list" class="p-5 space-y-4">
-            <!-- الإشعارات هنا -->
-        </div>
-    </div>
-
-    <!-- صفحة الاشتراكات -->
-    <div id="pricing-page" class="page bg-gray-50 min-h-screen">
-        <header class="p-5 flex items-center border-b bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">اختر خطتك</span>
-            <div class="w-6"></div>
-        </header>
-        <div class="p-6 space-y-8">
-            <div class="card-faded p-6 relative">
-                <h3 class="text-xl font-bold text-gray-800">الأساسية</h3>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-black text-blue-600">100</span>
-                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
-                </div>
-                <div class="h-px bg-gray-100 my-4"></div>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 200 رسالة شهرياً</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط حساب واحد</li>
-                </ul>
-                <button onclick="requestSubscription('basic')" class="w-full py-3 bg-gray-100 rounded-xl mt-6 font-bold text-gray-800 active:scale-95">اشترِ الآن</button>
-            </div>
-
-            <div class="card-faded p-6 border-2 border-blue-500 relative shadow-blue-100 shadow-xl">
-                <span class="badge-popular">الأفضل مبيعاً</span>
-                <h3 class="text-xl font-bold text-gray-800">الاحترافية</h3>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-black text-blue-600">500</span>
-                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
-                </div>
-                <div class="h-px bg-gray-100 my-4"></div>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 1000 رسالة شهرياً</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط 5 حسابات</li>
-                </ul>
-                <button onclick="requestSubscription('pro')" class="w-full py-3 btn-gradient rounded-xl mt-6 font-bold text-white active:scale-95">اشترِ الآن</button>
+    <!-- نافذة التأكيد الشفافة -->
+    <div id="confirm-modal" class="fixed inset-0 z-[100] flex items-center justify-center px-8 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
+        <div class="glass-modal w-full max-w-xs rounded-[2.5rem] p-8 text-center shadow-2xl relative z-10">
+            <h3 id="modal-title" class="text-lg font-bold text-black mb-2">تأكيد الإجراء</h3>
+            <p id="modal-desc" class="text-gray-600 text-xs mb-8">هل أنت متأكد من رغبتك في المتابعة؟</p>
+            <div class="flex flex-col gap-3">
+                <button id="modal-yes" class="w-full bg-black text-white font-bold py-4 rounded-2xl active:scale-95 transition">نعم، موافق</button>
+                <button id="modal-no" class="w-full bg-white/50 text-gray-500 font-bold py-3 rounded-2xl active:scale-95 transition">إلغاء</button>
             </div>
         </div>
-    </div>
-
-    <!-- صفحة QR والتكاملات -->
-    <div id="qr-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="closeQR()"></i>
-            <span class="flex-grow text-center font-bold">ربط حساب واتساب</span>
-            <div class="w-6"></div>
-        </header>
-        <main class="p-10 flex flex-col items-center justify-center qr-scanner-bg min-h-[80vh]">
-            <div class="p-6 bg-white rounded-[40px] shadow-2xl border-8 border-gray-50 mb-8 animate-pulse">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect" id="qr-image" class="w-64 h-64">
-            </div>
-            <div class="flex items-center gap-3 px-4 py-2 bg-blue-50 rounded-full mb-10">
-                <div class="w-2 h-2 bg-blue-600 rounded-full animate-ping"></div>
-                <span class="text-xs font-bold text-blue-600">تحديث الكود خلال: <span id="qr-timer">60</span> ثانية</span>
-            </div>
-            <div class="w-full space-y-3">
-                <button class="w-full py-4 bg-green-600 text-white font-black rounded-2xl shadow-xl active:scale-95 transition">بدء الاتصال</button>
-                <button class="w-full py-4 text-gray-400 font-bold" onclick="closeQR()">إلغاء العملية</button>
-            </div>
-        </main>
-    </div>
-
-    <!-- صفحات السياسات والخصوصية -->
-    <div id="privacy-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">سياسة الخصوصية</span>
-            <div class="w-6"></div>
-        </header>
-        <div class="p-6 prose text-xs text-gray-500 leading-loose">
-            <p class="font-bold text-gray-800 mb-4">نحن نأخذ خصوصيتك على محمل الجد.</p>
-            <p>عند استخدام Afnan، فإننا نقوم بتشفير جميع البيانات الخاصة بك. لا يتم حفظ رسائل الواتساب الخاصة بك في خوادمنا بل يتم تمريرها فقط عبر التكاملات المشفرة. يحق لنا جمع بيانات الاستخدام العامة لتحسين جودة النموذج الذكي.</p>
-            <p class="mt-4">نحن لا نشارك بريدك الإلكتروني أو بيانات ربط الحسابات مع أي طرف ثالث تحت أي طرف ثالث تحت أي ظرف من الظروف.</p>
-        </div>
-    </div>
-
-    <div id="terms-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">اتفاقية المستخدم</span>
-            <div class="w-6"></div>
-        </header>
-        <div class="p-6 text-xs text-gray-500 leading-loose">
-            <p class="font-bold text-gray-800 mb-4">باستخدامك للتطبيق أنت توافق على:</p>
-            <ul class="list-disc pr-4 space-y-2">
-                <li>عدم استخدام الخدمة لإرسال رسائل مزعجة (Spam).</li>
-                <li>تحمل المسؤولية الكاملة عن المحتوى الذي تتم جدولته.</li>
-                <li>احترام سياسة واتساب الرسمية في التعامل مع الحسابات.</li>
-                <li>أن رصيد النقاط غير قابل للاسترجاع بعد استخدامه.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- صفحة إنشاء مهمة -->
-    <div id="schedule-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">جدولة مهمة جديدة</span>
-            <div class="w-6"></div>
-        </header>
-        <main class="p-6 space-y-6">
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">رقم المستلم</label>
-                <input type="tel" id="task-phone" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none focus:border-blue-500" placeholder="+20 100 000 0000">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">محتوى الرسالة</label>
-                <textarea id="task-content" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none h-32" placeholder="اكتب محتوى المهمة هنا..."></textarea>
-            </div>
-            <div class="grid grid-cols-3 gap-3">
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ساعة</label>
-                    <input type="number" id="task-hour" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">دقيقة</label>
-                    <input type="number" id="task-minute" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ثانية</label>
-                    <input type="number" id="task-second" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                </div>
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">تاريخ الإرسال</label>
-                <input type="date" id="task-date" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none">
-            </div>
-            <button onclick="saveTask()" class="w-full py-5 btn-gradient text-white font-black rounded-2xl mt-4 active:scale-95">حفظ المهمة</button>
-        </main>
-    </div>
-
-    <!-- صفحة تخصيص الوكيل -->
-    <div id="customize-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">تخصيص الوكيل الذكي</span>
-            <div class="w-6"></div>
-        </header>
-        <main class="p-6 space-y-6">
-            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <p class="text-[10px] text-emerald-700 leading-relaxed">هنا يمكنك تعليم Afnan كيف يرد على عملائك وما هي القواعد التي يجب اتباعها.</p>
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">اسم المعرفة</label>
-                <input type="text" id="ai-name" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: الرد الترحيبي">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">استخدم عندما (كلمات مفتاحية) *</label>
-                <input type="text" id="ai-keywords" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: السلام عليكم، أهلاً، مرحباً">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">المحتوى التعليمي *</label>
-                <textarea id="ai-instructions" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none h-40" placeholder="اكتب التعليمات التي يجب أن يتبعها البوت هنا..."></textarea>
-            </div>
-            <button onclick="saveAIConfig()" class="w-full py-5 bg-gray-800 text-white font-black rounded-2xl mt-4 active:scale-95">حفظ التغييرات</button>
-        </main>
-    </div>
-
-    <!-- صفحة الملف الشخصي -->
-    <div id="profile-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">حسابي الشخصي</span>
-            <div class="w-6"></div>
-        </header>
-        <main class="p-6 flex flex-col items-center">
-            <div class="relative group cursor-pointer">
-                <div class="w-28 h-28 rounded-full border-8 border-gray-50 shadow-inner overflow-hidden">
-                    <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff&size=200" class="w-full h-full object-cover">
-                </div>
-            </div>
-            <div class="w-full mt-10 space-y-3">
-                <div class="flex flex-col gap-1 px-2">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase">الاسم الكامل</span>
-                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold flex justify-between">
-                        <span id="profile-name">...</span>
-                    </div>
-                </div>
-                <div class="flex flex-col gap-1 px-2">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase">البريد الإلكتروني</span>
-                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-400">
-                        <span id="profile-email">...</span>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full mt-10 space-y-3 px-2">
-                <button onclick="handleLogout()" class="w-full py-4 text-gray-500 font-bold bg-white rounded-2xl border border-gray-100 flex items-center justify-center gap-2">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> تسجيل الخروج
-                </button>
-            </div>
-        </main>
     </div>
 
     <script type="module">
-        import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, getDocs, deleteDoc } from './api.js';
+        import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, deleteDoc } from './api.js';
+        import { protectPage, navigateTo } from './router.js';
 
-        // تهيئة الأيقونات
+        if (!protectPage('main')) return;
+
         lucide.createIcons();
-
         let currentUser = null;
 
-        // التحقق من حالة تسجيل الدخول
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -439,11 +186,10 @@
                 syncTasks(user.uid);
                 syncNotifications(user.uid);
             } else {
-                window.location.href = 'login.html';
+                navigateTo('login');
             }
         });
 
-        // مزامنة بيانات المستخدم
         function syncUserData(uid) {
             onSnapshot(doc(db, "users", uid), (doc) => {
                 if (doc.exists()) {
@@ -453,172 +199,92 @@
                     document.getElementById('user-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + data.displayName;
                     document.getElementById('user-balance').innerText = data.balance || 0;
                     document.getElementById('user-subscription').innerText = data.subscription === 'free' ? 'اشترك الآن' : 'مشترك (' + data.subscription + ')';
-                    
-                    // Profile page
-                    document.getElementById('profile-name').innerText = data.displayName || 'مستخدم';
-                    document.getElementById('profile-email').innerText = data.email;
-                    document.getElementById('profile-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + data.displayName;
-                }
-            }, (error) => {
-                console.error("Sync User Data Error:", error);
-                if (error.code === 'permission-denied') {
-                    document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
-                    document.getElementById('user-email').innerText = currentUser.email;
                 }
             });
         }
 
-        // مزامنة المهام
-        function syncTasks(uid) {
-            const q = query(collection(db, "tasks"), where("userId", "==", uid));
-            onSnapshot(q, (snapshot) => {
-                const pendingList = document.getElementById('pending-tasks-list');
-                const completedList = document.getElementById('completed-tasks-list');
-                pendingList.innerHTML = '';
-                completedList.innerHTML = '';
-
-                snapshot.forEach((doc) => {
-                    const task = doc.data();
-                    const taskEl = document.createElement('div');
-                    taskEl.className = 'p-4 bg-gray-50 rounded-2xl border border-gray-100 flex justify-between items-center';
-                    taskEl.innerHTML = `
-                        <div>
-                            <p class="text-sm font-bold text-gray-800">${task.content}</p>
-                            <p class="text-[10px] text-gray-400">${task.phone} | ${task.date} ${task.hour}:${task.minute}</p>
-                        </div>
-                        ${task.status === 'pending' ? 
-                            `<button onclick="window.completeTask('${doc.id}')" class="text-blue-600"><i data-lucide="check-circle" class="w-5 h-5"></i></button>` : 
-                            `<i data-lucide="check" class="w-5 h-5 text-green-500"></i>`}
-                    `;
-                    
-                    if (task.status === 'pending') {
-                        pendingList.appendChild(taskEl);
-                    } else {
-                        completedList.appendChild(taskEl);
-                    }
-                });
-                lucide.createIcons();
-            });
-        }
-
-        // مزامنة الإشعارات
-        function syncNotifications(uid) {
-            const q = query(collection(db, "notifications"), where("userId", "in", [uid, "all"]));
-            onSnapshot(q, (snapshot) => {
-                const list = document.getElementById('notifications-list');
-                const badge = document.getElementById('notif-badge');
-                list.innerHTML = '';
-                
-                if (snapshot.empty) {
-                    list.innerHTML = '<p class="text-center text-gray-400 text-xs">لا توجد إشعارات حالياً</p>';
-                    badge.classList.add('hidden');
-                } else {
-                    badge.classList.remove('hidden');
-                    snapshot.forEach((doc) => {
-                        const notif = doc.data();
-                        const el = document.createElement('div');
-                        el.className = 'p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-3';
-                        el.innerHTML = `
-                            <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0"></i>
-                            <p class="text-xs text-blue-800 leading-relaxed">${notif.message}</p>
-                        `;
-                        list.appendChild(el);
-                    });
-                }
-                lucide.createIcons();
-            });
-        }
-
-        // وظائف عالمية
         window.showPage = function(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             window.scrollTo(0,0);
             lucide.createIcons();
-            if(pageId === 'qr-page') startQRTimer();
         };
 
-        window.handleLogout = async function() {
-            await signOut(auth);
-            window.location.href = 'login.html';
-        };
+        // نظام الـ Modal الشفاف
+        let modalCallback = null;
+        function showConfirm(title, desc, callback) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalCallback = callback;
+        }
+        function hideConfirm() {
+            document.getElementById('confirm-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
+        document.getElementById('modal-no').addEventListener('click', hideConfirm);
+        document.getElementById('modal-yes').addEventListener('click', () => {
+            if (modalCallback) modalCallback();
+            hideConfirm();
+        });
 
-        window.saveTask = async function() {
-            const phone = document.getElementById('task-phone').value;
-            const content = document.getElementById('task-content').value;
-            const hour = document.getElementById('task-hour').value;
-            const minute = document.getElementById('task-minute').value;
-            const second = document.getElementById('task-second').value;
-            const date = document.getElementById('task-date').value;
-
-            if (!phone || !content) return alert('يرجى ملء البيانات الأساسية');
-
-            await addDoc(collection(db, "tasks"), {
-                userId: currentUser.uid,
-                phone,
-                content,
-                hour,
-                minute,
-                second,
-                date,
-                status: 'pending',
-                createdAt: new Date().toISOString()
+        window.handleLogout = function() {
+            showConfirm('تسجيل الخروج', 'هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟', async () => {
+                await signOut(auth);
+                navigateTo('login');
             });
-
-            alert('تم حفظ المهمة بنجاح');
-            window.showPage('tasks-page');
         };
 
-        window.completeTask = async function(taskId) {
-            await updateDoc(doc(db, "tasks", taskId), { status: 'completed' });
-        };
-
-        window.saveAIConfig = async function() {
-            const name = document.getElementById('ai-name').value;
-            const keywords = document.getElementById('ai-keywords').value;
-            const instructions = document.getElementById('ai-instructions').value;
-
-            await updateDoc(doc(db, "users", currentUser.uid), {
-                aiConfig: { name, keywords, instructions }
+        window.handleDeleteAccount = function() {
+            showConfirm('حذف الحساب', 'تحذير: سيتم حذف جميع بياناتك ومهامك نهائياً. هل أنت موافق؟', async () => {
+                // Logic to delete from Firestore then Auth
+                await deleteDoc(doc(db, "users", currentUser.uid));
+                await currentUser.delete();
+                navigateTo('login');
             });
-
-            alert('تم حفظ التخصيص بنجاح');
         };
 
-        window.requestSubscription = async function(plan) {
-            await addDoc(collection(db, "subscription_requests"), {
-                userId: currentUser.uid,
-                email: currentUser.email,
-                plan: plan,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            });
-            alert('تم إرسال طلب الاشتراك، سيتم التفعيل من قبل الإدارة قريباً');
-        };
-
-        // منطق الـ QR
+        // QR Logic
         let qrInterval;
-        window.closeQR = function() {
-            clearInterval(qrInterval);
-            window.showPage('home-page');
-        };
-
-        function startQRTimer() {
-            let timeLeft = 60;
-            const timerEl = document.getElementById('qr-timer');
+        window.generateQR = function(platform) {
+            const container = document.getElementById('qr-container');
             const qrImg = document.getElementById('qr-image');
+            const timerEl = document.getElementById('qr-timer');
+            container.classList.remove('hidden');
+            let timeLeft = 60;
+            qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Afnan-${platform}-${currentUser.uid}-${Date.now()}`;
             clearInterval(qrInterval);
             qrInterval = setInterval(() => {
                 timeLeft--;
                 timerEl.innerText = timeLeft;
                 if(timeLeft <= 0) {
                     timeLeft = 60;
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect-${Date.now()}`;
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=Afnan-${platform}-${currentUser.uid}-${Date.now()}`;
                 }
             }, 1000);
-        }
+        };
 
-        document.addEventListener('touchstart', function() {}, true);
+        // Chat Logic
+        document.getElementById('send-chat-btn').addEventListener('click', async () => {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const chatBox = document.getElementById('chat-messages');
+            chatBox.innerHTML += `<div class="chat-bubble user-msg">${msg}</div>`;
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Simulate AI/WhatsApp response
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="chat-bubble bot-msg">جاري معالجة طلبك عبر الوكيل المخصص...</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1000);
+        });
+
+        // Placeholder for other sync functions
+        function syncTasks(uid) {}
+        function syncNotifications(uid) {}
     </script>
 </body>
 </html>

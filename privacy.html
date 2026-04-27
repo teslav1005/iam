@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سياسة الخصوصية - Afnan AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Noto Sans Arabic', sans-serif; background-color: #f9fafb; }
+    </style>
+</head>
+<body class="max-w-md mx-auto min-h-screen bg-white shadow-xl">
+    <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
+        <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="window.history.back()"></i>
+        <span class="flex-grow text-center font-bold">سياسة الخصوصية</span>
+        <div class="w-6"></div>
+    </header>
+    <main class="p-6 space-y-6 text-sm text-gray-600 leading-relaxed">
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">1. جمع البيانات</h2>
+            <p>نقوم بجمع معلوماتك الأساسية مثل البريد الإلكتروني والاسم عند تسجيل الدخول عبر Google أو X لتقديم خدماتنا المخصصة.</p>
+        </section>
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">2. استخدام البيانات</h2>
+            <p>تُستخدم بياناتك فقط لتحسين تجربتك مع الوكيل الذكي وإدارة مهامك المجدولة. نحن لا نبيع بياناتك لأي طرف ثالث.</p>
+        </section>
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">3. أمن المعلومات</h2>
+            <p>نستخدم تقنيات تشفير متقدمة لحماية بياناتك وربط حساباتك بالمنصات المختلفة (مثل واتساب) بشكل آمن تماماً.</p>
+        </section>
+    </main>
+    <script type="module">
+        import { protectPage } from './router.js';
+        if (!protectPage('privacy')) return;
+        lucide.createIcons();
+    </script>
+</body>
+</html>

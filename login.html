@@ -4,72 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Afnan AI Login</title>
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons for icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-transition {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-transition:active {
-            transform: scale(0.96);
-        }
-
-        /* Smooth transition for language switching */
-        .fade-element {
-            transition: opacity 0.3s ease;
-        }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-transition:active { transform: scale(0.96); }
+        .fade-element { transition: opacity 0.3s ease; }
+        .checkbox-custom { width: 20px; height: 20px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .checkbox-custom.checked { background: #2563eb; border-color: #2563eb; }
+        .checkbox-custom i { color: white; display: none; }
+        .checkbox-custom.checked i { display: block; }
     </style>
 </head>
 <body class="bg-[#FCFCFC] min-h-screen flex flex-col items-center justify-center overflow-hidden relative">
 
-    <!-- Header -->
     <header class="absolute top-0 left-0 w-full flex justify-between items-center p-6 sm:px-10" id="header-container">
-        <!-- Logo (Simple Infinity-like shape as per reference) -->
         <div class="text-blue-600">
             <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 12c-2-2.5-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.5 6-4Zm0 0c2 2.5 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.5-6 4Z"/>
                 <circle cx="18" cy="12" r="1" fill="currentColor" stroke="none" />
             </svg>
         </div>
-
-        <!-- Language Button -->
-        <button id="lang-toggle" class="bg-[#f2f2f2] hover:bg-[#e8e8e8] text-gray-800 font-bold text-xs px-4 py-2 rounded-xl btn-transition">
-            AR
-        </button>
+        <button id="lang-toggle" class="bg-[#f2f2f2] hover:bg-[#e8e8e8] text-gray-800 font-bold text-xs px-4 py-2 rounded-xl btn-transition">AR</button>
     </header>
 
-    <!-- Main Content -->
     <main class="flex flex-col items-center w-full px-6 text-center max-w-md">
-        <!-- Title -->
-        <h1 id="main-title" class="text-[42px] sm:text-[48px] font-[800] text-black leading-[1.1] mb-4 tracking-tight">
-            Welcome to<br>Afnan ai
-        </h1>
-        
-        <!-- Subtitle -->
-        <p id="sub-title" class="text-[#929292] text-[18px] sm:text-[20px] font-medium mb-14">
-            Start your creative journey now
-        </p>
+        <h1 id="main-title" class="text-[42px] sm:text-[48px] font-[800] text-black leading-[1.1] mb-4 tracking-tight">Welcome to<br>Afnan ai</h1>
+        <p id="sub-title" class="text-[#929292] text-[18px] sm:text-[20px] font-medium mb-10">Start your creative journey now</p>
 
-        <!-- Login Buttons Section -->
+        <!-- Privacy Checkbox -->
+        <div class="flex items-center gap-3 mb-8 bg-gray-50 p-4 rounded-2xl border border-gray-100 w-full max-w-[340px]">
+            <div id="privacy-check" class="checkbox-custom">
+                <i data-lucide="check" class="w-4 h-4"></i>
+            </div>
+            <p class="text-[12px] text-gray-500 text-left leading-tight">
+                I agree to the <a href="#" id="view-privacy" class="text-blue-600 font-bold">Privacy Policy</a> and <a href="#" id="view-terms" class="text-blue-600 font-bold">User Agreement</a>.
+            </p>
+        </div>
+
         <div class="w-full space-y-4 max-w-[340px]">
-            <span id="login-label" class="text-[11px] font-bold text-[#bcbcbc] tracking-[0.2em] uppercase block mb-6">
-                LOGIN TO CONTINUE
-            </span>
-
-            <!-- Google Login -->
-            <button id="google-login-btn" class="w-full h-[64px] bg-black hover:bg-neutral-800 text-white rounded-[24px] flex items-center justify-center gap-3 btn-transition shadow-lg shadow-black/5">
+            <span id="login-label" class="text-[11px] font-bold text-[#bcbcbc] tracking-[0.2em] uppercase block mb-6">LOGIN TO CONTINUE</span>
+            <button id="google-login-btn" class="w-full h-[64px] bg-black hover:bg-neutral-800 text-white rounded-[24px] flex items-center justify-center gap-3 btn-transition shadow-lg shadow-black/5 opacity-50 cursor-not-allowed" disabled>
                 <span id="google-text" class="font-bold text-[17px]">Google Log in</span>
-                <!-- Custom Google Icon -->
                 <svg viewBox="0 0 48 48" width="22" height="22">
                     <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
                     <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
@@ -77,10 +55,7 @@
                     <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
                 </svg>
             </button>
-
-            <!-- X (Twitter) Login - Icon Only -->
-            <button id="twitter-login-btn" class="w-full h-[64px] bg-white border-[1.5px] border-gray-100 hover:bg-gray-50 text-black rounded-[24px] flex items-center justify-center btn-transition shadow-sm">
-                <!-- X Icon using SVG -->
+            <button id="twitter-login-btn" class="w-full h-[64px] bg-white border-[1.5px] border-gray-100 hover:bg-gray-50 text-black rounded-[24px] flex items-center justify-center btn-transition shadow-sm opacity-50 cursor-not-allowed" disabled>
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
@@ -90,106 +65,79 @@
 
     <script type="module">
         import { auth, db, googleProvider, twitterProvider, signInWithPopup, doc, setDoc, getDoc } from './api.js';
+        import { protectPage, navigateTo } from './router.js';
 
-        // Data for Translations
+        if (!protectPage('login')) return;
+
         const content = {
-            EN: {
-                welcome: "Welcome to<br>Afnan ai",
-                subtitle: "Start your creative journey now",
-                loginTo: "LOGIN TO CONTINUE",
-                googleBtn: "Google Log in",
-                nextLang: "AR",
-                dir: "ltr",
-                align: "flex-row"
-            },
-            AR: {
-                welcome: "مرحباً بك في<br>Afnan ai",
-                subtitle: "ابدأ رحلتك الإبداعية الآن",
-                loginTo: "قم بتسجيل الدخول للمتابعة",
-                googleBtn: "دخول بواسطة جوجل",
-                nextLang: "EN",
-                dir: "rtl",
-                align: "flex-row-reverse"
-            }
+            EN: { welcome: "Welcome to<br>Afnan ai", subtitle: "Start your creative journey now", loginTo: "LOGIN TO CONTINUE", googleBtn: "Google Log in", nextLang: "AR", dir: "ltr", align: "flex-row", agree: "I agree to the <a href='#' id='view-privacy' class='text-blue-600 font-bold'>Privacy Policy</a> and <a href='#' id='view-terms' class='text-blue-600 font-bold'>User Agreement</a>." },
+            AR: { welcome: "مرحباً بك في<br>Afnan ai", subtitle: "ابدأ رحلتك الإبداعية الآن", loginTo: "قم بتسجيل الدخول للمتابعة", googleBtn: "دخول بواسطة جوجل", nextLang: "EN", dir: "rtl", align: "flex-row-reverse", agree: "أوافق على <a href='#' id='view-privacy' class='text-blue-600 font-bold'>سياسة الخصوصية</a> و <a href='#' id='view-terms' class='text-blue-600 font-bold'>اتفاقية المستخدم</a>." }
         };
 
         let currentLang = 'EN';
+        let isAgreed = false;
 
-        // Elements
         const langToggleBtn = document.getElementById('lang-toggle');
-        const mainTitle = document.getElementById('main-title');
-        const subTitle = document.getElementById('sub-title');
-        const loginLabel = document.getElementById('login-label');
-        const googleText = document.getElementById('google-text');
-        const headerContainer = document.getElementById('header-container');
+        const privacyCheck = document.getElementById('privacy-check');
+        const googleBtn = document.getElementById('google-login-btn');
+        const twitterBtn = document.getElementById('twitter-login-btn');
 
-        // Function to Switch Language
-        function switchLanguage() {
-            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
-            const t = content[currentLang];
-
-            // Update Text content
-            mainTitle.innerHTML = t.welcome;
-            subTitle.innerText = t.subtitle;
-            loginLabel.innerText = t.loginTo;
-            googleText.innerText = t.googleBtn;
-            langToggleBtn.innerText = t.nextLang;
-
-            // Update Layout
-            document.body.dir = t.dir;
-            headerContainer.className = `absolute top-0 left-0 w-full flex justify-between items-center p-6 sm:px-10 ${t.align}`;
-
-            // Add simple fade animation
-            [mainTitle, subTitle, loginLabel, googleText].forEach(el => {
-                el.style.opacity = 0;
-                setTimeout(() => el.style.opacity = 1, 50);
-            });
-        }
-
-        // Firebase Login Handler
-        async function handleLogin(provider) {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                
-                // Check if user exists in Firestore, if not create
-                const userRef = doc(db, "users", user.uid);
-                const userSnap = await getDoc(userRef);
-                
-                try {
-                    if (!userSnap.exists()) {
-                        await setDoc(userRef, {
-                            uid: user.uid,
-                            displayName: user.displayName,
-                            email: user.email,
-                            photoURL: user.photoURL,
-                            balance: 20, // Default balance
-                            subscription: "free", // Default subscription
-                            createdAt: new Date().toISOString()
-                        });
-                    }
-                    window.location.href = 'afnan.html';
-                } catch (dbError) {
-                    console.error("Firestore Error:", dbError);
-                    if (dbError.code === 'permission-denied') {
-                        alert("خطأ في الصلاحيات: يرجى التأكد من تفعيل قواعد Firestore (Security Rules) في لوحة تحكم Firebase.");
-                    } else {
-                        // المتابعة حتى لو فشل حفظ البيانات في Firestore لضمان دخول المستخدم
-                        window.location.href = 'afnan.html';
-                    }
-                }
-            } catch (error) {
-                console.error("Login Error:", error);
-                alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
+        function updateAgreedState() {
+            if (isAgreed) {
+                googleBtn.disabled = false;
+                googleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                twitterBtn.disabled = false;
+                twitterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                googleBtn.disabled = true;
+                googleBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                twitterBtn.disabled = true;
+                twitterBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
 
-        // Event Listeners
-        langToggleBtn.addEventListener('click', switchLanguage);
-        document.getElementById('google-login-btn').addEventListener('click', () => handleLogin(googleProvider));
-        document.getElementById('twitter-login-btn').addEventListener('click', () => handleLogin(twitterProvider));
+        privacyCheck.addEventListener('click', () => {
+            isAgreed = !isAgreed;
+            privacyCheck.classList.toggle('checked', isAgreed);
+            updateAgreedState();
+        });
 
-        // Initialize Lucide icons
+        langToggleBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
+            const t = content[currentLang];
+            document.getElementById('main-title').innerHTML = t.welcome;
+            document.getElementById('sub-title').innerText = t.subtitle;
+            document.getElementById('login-label').innerText = t.loginTo;
+            document.getElementById('google-text').innerText = t.googleBtn;
+            langToggleBtn.innerText = t.nextLang;
+            document.body.dir = t.dir;
+            document.getElementById('header-container').className = `absolute top-0 left-0 w-full flex justify-between items-center p-6 sm:px-10 ${t.align}`;
+        });
+
+        async function handleLogin(provider) {
+            if (!isAgreed) return;
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, balance: 20, subscription: "free", createdAt: new Date().toISOString() });
+                } else {
+                    // Update email if changed
+                    await setDoc(userRef, { email: user.email }, { merge: true });
+                }
+                navigateTo('main');
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+
+        googleBtn.addEventListener('click', () => handleLogin(googleProvider));
+        twitterBtn.addEventListener('click', () => handleLogin(twitterProvider));
+        document.getElementById('view-privacy').addEventListener('click', (e) => { e.preventDefault(); navigateTo('privacy'); });
+        document.getElementById('view-terms').addEventListener('click', (e) => { e.preventDefault(); navigateTo('terms'); });
+
         lucide.createIcons();
     </script>
 </body>

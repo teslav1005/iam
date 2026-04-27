@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اتفاقية المستخدم - Afnan AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Noto Sans Arabic', sans-serif; background-color: #f9fafb; }
+    </style>
+</head>
+<body class="max-w-md mx-auto min-h-screen bg-white shadow-xl">
+    <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
+        <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="window.history.back()"></i>
+        <span class="flex-grow text-center font-bold">اتفاقية المستخدم</span>
+        <div class="w-6"></div>
+    </header>
+    <main class="p-6 space-y-6 text-sm text-gray-600 leading-relaxed">
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">1. شروط الاستخدام</h2>
+            <p>باستخدامك لـ Afnan AI، أنت توافق على عدم استخدام الخدمة في أي أنشطة غير قانونية أو إرسال رسائل مزعجة (Spam).</p>
+        </section>
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">2. المسؤولية</h2>
+            <p>المستخدم مسؤول مسؤولية كاملة عن المحتوى الذي يتم إرساله عبر الوكيل الذكي الخاص به.</p>
+        </section>
+        <section>
+            <h2 class="font-bold text-gray-900 mb-2">3. الاشتراكات</h2>
+            <p>تخضع الاشتراكات لسياسة الدفع المسبق، والرصيد المضاف غير قابل للاسترداد بعد استخدامه.</p>
+        </section>
+    </main>
+    <script type="module">
+        import { protectPage } from './router.js';
+        if (!protectPage('terms')) return;
+        lucide.createIcons();
+    </script>
+</body>
+</html>
