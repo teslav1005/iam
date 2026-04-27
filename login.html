@@ -156,19 +156,28 @@
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
                 
-                if (!userSnap.exists()) {
-                    await setDoc(userRef, {
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        email: user.email,
-                        photoURL: user.photoURL,
-                        balance: 20, // Default balance
-                        subscription: "free", // Default subscription
-                        createdAt: new Date().toISOString()
-                    });
+                try {
+                    if (!userSnap.exists()) {
+                        await setDoc(userRef, {
+                            uid: user.uid,
+                            displayName: user.displayName,
+                            email: user.email,
+                            photoURL: user.photoURL,
+                            balance: 20, // Default balance
+                            subscription: "free", // Default subscription
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+                    window.location.href = 'afnan.html';
+                } catch (dbError) {
+                    console.error("Firestore Error:", dbError);
+                    if (dbError.code === 'permission-denied') {
+                        alert("خطأ في الصلاحيات: يرجى التأكد من تفعيل قواعد Firestore (Security Rules) في لوحة تحكم Firebase.");
+                    } else {
+                        // المتابعة حتى لو فشل حفظ البيانات في Firestore لضمان دخول المستخدم
+                        window.location.href = 'afnan.html';
+                    }
                 }
-                
-                window.location.href = 'afnan.html';
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);

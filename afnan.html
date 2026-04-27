@@ -459,6 +459,12 @@
                     document.getElementById('profile-email').innerText = data.email;
                     document.getElementById('profile-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + data.displayName;
                 }
+            }, (error) => {
+                console.error("Sync User Data Error:", error);
+                if (error.code === 'permission-denied') {
+                    document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
+                    document.getElementById('user-email').innerText = currentUser.email;
+                }
             });
         }
 
