@@ -67,7 +67,7 @@
             </span>
 
             <!-- Google Login -->
-            <button onclick="handleLogin()" class="w-full h-[64px] bg-black hover:bg-neutral-800 text-white rounded-[24px] flex items-center justify-center gap-3 btn-transition shadow-lg shadow-black/5">
+            <button id="google-login-btn" class="w-full h-[64px] bg-black hover:bg-neutral-800 text-white rounded-[24px] flex items-center justify-center gap-3 btn-transition shadow-lg shadow-black/5">
                 <span id="google-text" class="font-bold text-[17px]">Google Log in</span>
                 <!-- Custom Google Icon -->
                 <svg viewBox="0 0 48 48" width="22" height="22">
@@ -79,7 +79,7 @@
             </button>
 
             <!-- X (Twitter) Login - Icon Only -->
-            <button onclick="handleLogin()" class="w-full h-[64px] bg-white border-[1.5px] border-gray-100 hover:bg-gray-50 text-black rounded-[24px] flex items-center justify-center btn-transition shadow-sm">
+            <button id="twitter-login-btn" class="w-full h-[64px] bg-white border-[1.5px] border-gray-100 hover:bg-gray-50 text-black rounded-[24px] flex items-center justify-center btn-transition shadow-sm">
                 <!-- X Icon using SVG -->
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -88,7 +88,9 @@
         </div>
     </main>
 
-    <script>
+    <script type="module">
+        import { auth, db, googleProvider, twitterProvider, signInWithPopup, doc, setDoc, getDoc } from './api.js';
+
         // Data for Translations
         const content = {
             EN: {
@@ -144,15 +146,41 @@
             });
         }
 
-        // Redirect function
-        function handleLogin() {
-            window.location.href = 'afnan.html';
+        // Firebase Login Handler
+        async function handleLogin(provider) {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                
+                // Check if user exists in Firestore, if not create
+                const userRef = doc(db, "users", user.uid);
+                const userSnap = await getDoc(userRef);
+                
+                if (!userSnap.exists()) {
+                    await setDoc(userRef, {
+                        uid: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        balance: 20, // Default balance
+                        subscription: "free", // Default subscription
+                        createdAt: new Date().toISOString()
+                    });
+                }
+                
+                window.location.href = 'afnan.html';
+            } catch (error) {
+                console.error("Login Error:", error);
+                alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
+            }
         }
 
-        // Event Listener
+        // Event Listeners
         langToggleBtn.addEventListener('click', switchLanguage);
+        document.getElementById('google-login-btn').addEventListener('click', () => handleLogin(googleProvider));
+        document.getElementById('twitter-login-btn').addEventListener('click', () => handleLogin(twitterProvider));
 
-        // Initialize Lucide icons (if any i tags were used)
+        // Initialize Lucide icons
         lucide.createIcons();
     </script>
 </body>
