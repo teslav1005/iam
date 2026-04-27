@@ -1,61 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afnan AI Login</title>
+    <title>تسجيل الدخول - Afnan AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Noto Sans Arabic', sans-serif; -webkit-tap-highlight-color: transparent; background-color: #FCFCFC; }
         .btn-transition { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-transition:active { transform: scale(0.96); }
-        .fade-element { transition: opacity 0.3s ease; }
-        .checkbox-custom { width: 20px; height: 20px; border: 2px solid #e5e7eb; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .checkbox-custom { width: 24px; height: 24px; border: 2px solid #e5e7eb; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
         .checkbox-custom.checked { background: #2563eb; border-color: #2563eb; }
         .checkbox-custom i { color: white; display: none; }
         .checkbox-custom.checked i { display: block; }
     </style>
 </head>
-<body class="bg-[#FCFCFC] min-h-screen flex flex-col items-center justify-center overflow-hidden relative">
+<body class="min-h-screen flex flex-col items-center justify-center p-6">
 
-    <header class="absolute top-0 left-0 w-full flex justify-between items-center p-6 sm:px-10" id="header-container">
+    <header class="absolute top-0 left-0 w-full flex justify-between items-center p-6">
         <div class="text-blue-600">
-            <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" width="34" height="34" stroke="currentColor" stroke-width="2.5" fill="none">
                 <path d="M12 12c-2-2.5-4-4-6-4a4 4 0 1 0 0 8c2 0 4-1.5 6-4Zm0 0c2 2.5 4 4 6 4a4 4 0 1 0 0-8c-2 0-4 1.5-6 4Z"/>
-                <circle cx="18" cy="12" r="1" fill="currentColor" stroke="none" />
             </svg>
         </div>
-        <button id="lang-toggle" class="bg-[#f2f2f2] hover:bg-[#e8e8e8] text-gray-800 font-bold text-xs px-4 py-2 rounded-xl btn-transition">AR</button>
     </header>
 
-    <main class="flex flex-col items-center w-full px-6 text-center max-w-md">
-        <h1 id="main-title" class="text-[42px] sm:text-[48px] font-[800] text-black leading-[1.1] mb-4 tracking-tight">Welcome to<br>Afnan ai</h1>
-        <p id="sub-title" class="text-[#929292] text-[18px] sm:text-[20px] font-medium mb-10">Start your creative journey now</p>
+    <main class="w-full max-w-md text-center">
+        <h1 class="text-[32px] font-black text-black leading-tight mb-2">أهلاً بكم في<br>أفنان للذكاء الاصطناعي</h1>
+        <p class="text-gray-400 text-lg mb-10">ابدأ رحلتك الإبداعية الآن</p>
 
         <!-- Privacy Checkbox -->
-        <div class="flex items-center gap-3 mb-8 bg-gray-50 p-4 rounded-2xl border border-gray-100 w-full max-w-[340px]">
-            <div id="privacy-check" class="checkbox-custom">
-                <i data-lucide="check" class="w-4 h-4"></i>
+        <div class="bg-white border border-gray-100 rounded-3xl p-5 mb-8 shadow-sm">
+            <div class="flex items-center gap-4 text-right">
+                <div id="privacy-check" class="checkbox-custom">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                </div>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    أوافق على <a href="#" id="view-privacy" class="text-blue-600 font-bold underline">سياسة الخصوصية</a> و <a href="#" id="view-terms" class="text-blue-600 font-bold underline">اتفاقية المستخدم</a>.
+                </p>
             </div>
-            <p class="text-[12px] text-gray-500 text-left leading-tight">
-                I agree to the <a href="#" id="view-privacy" class="text-blue-600 font-bold">Privacy Policy</a> and <a href="#" id="view-terms" class="text-blue-600 font-bold">User Agreement</a>.
-            </p>
         </div>
 
-        <div class="w-full space-y-4 max-w-[340px]">
-            <span id="login-label" class="text-[11px] font-bold text-[#bcbcbc] tracking-[0.2em] uppercase block mb-6">LOGIN TO CONTINUE</span>
-            <button id="google-login-btn" class="w-full h-[64px] bg-black hover:bg-neutral-800 text-white rounded-[24px] flex items-center justify-center gap-3 btn-transition shadow-lg shadow-black/5 opacity-50 cursor-not-allowed" disabled>
-                <span id="google-text" class="font-bold text-[17px]">Google Log in</span>
-                <svg viewBox="0 0 48 48" width="22" height="22">
+        <div class="space-y-4">
+            <p class="text-[11px] font-bold text-gray-300 tracking-widest uppercase">سجل الدخول للمتابعة</p>
+            
+            <button id="google-login-btn" class="w-full h-16 bg-[#808080] text-white rounded-3xl flex items-center justify-center gap-3 btn-transition opacity-60 cursor-not-allowed" disabled>
+                <span class="font-bold text-lg">تسجيل الدخول إلى جوجل</span>
+                <svg viewBox="0 0 48 48" width="24" height="24">
                     <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
                     <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
                     <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
                     <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
                 </svg>
             </button>
-            <button id="twitter-login-btn" class="w-full h-[64px] bg-white border-[1.5px] border-gray-100 hover:bg-gray-50 text-black rounded-[24px] flex items-center justify-center btn-transition shadow-sm opacity-50 cursor-not-allowed" disabled>
+
+            <button id="twitter-login-btn" class="w-full h-16 bg-white border-2 border-gray-100 text-black rounded-3xl flex items-center justify-center btn-transition opacity-60 cursor-not-allowed" disabled>
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
@@ -67,51 +68,40 @@
         import { auth, db, googleProvider, twitterProvider, signInWithPopup, doc, setDoc, getDoc } from './api.js';
         import { protectPage, navigateTo } from './router.js';
 
-        if (!protectPage('login')) return;
+        // حماية الصفحة
+        if (!protectPage('login')) {
+            // إذا فشلت الحماية، سنحاول إعادة التوجيه بشكل صحيح
+            console.log("Redirecting to login with correct ID...");
+        }
 
-        const content = {
-            EN: { welcome: "Welcome to<br>Afnan ai", subtitle: "Start your creative journey now", loginTo: "LOGIN TO CONTINUE", googleBtn: "Google Log in", nextLang: "AR", dir: "ltr", align: "flex-row", agree: "I agree to the <a href='#' id='view-privacy' class='text-blue-600 font-bold'>Privacy Policy</a> and <a href='#' id='view-terms' class='text-blue-600 font-bold'>User Agreement</a>." },
-            AR: { welcome: "مرحباً بك في<br>Afnan ai", subtitle: "ابدأ رحلتك الإبداعية الآن", loginTo: "قم بتسجيل الدخول للمتابعة", googleBtn: "دخول بواسطة جوجل", nextLang: "EN", dir: "rtl", align: "flex-row-reverse", agree: "أوافق على <a href='#' id='view-privacy' class='text-blue-600 font-bold'>سياسة الخصوصية</a> و <a href='#' id='view-terms' class='text-blue-600 font-bold'>اتفاقية المستخدم</a>." }
-        };
+        lucide.createIcons();
 
-        let currentLang = 'EN';
         let isAgreed = false;
-
-        const langToggleBtn = document.getElementById('lang-toggle');
         const privacyCheck = document.getElementById('privacy-check');
         const googleBtn = document.getElementById('google-login-btn');
         const twitterBtn = document.getElementById('twitter-login-btn');
 
-        function updateAgreedState() {
+        // تفعيل/تعطيل الأزرار بناءً على الموافقة
+        function updateButtons() {
             if (isAgreed) {
                 googleBtn.disabled = false;
-                googleBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                googleBtn.classList.remove('opacity-60', 'cursor-not-allowed', 'bg-[#808080]');
+                googleBtn.classList.add('bg-black');
                 twitterBtn.disabled = false;
-                twitterBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                twitterBtn.classList.remove('opacity-60', 'cursor-not-allowed');
             } else {
                 googleBtn.disabled = true;
-                googleBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                googleBtn.classList.add('opacity-60', 'cursor-not-allowed', 'bg-[#808080]');
+                googleBtn.classList.remove('bg-black');
                 twitterBtn.disabled = true;
-                twitterBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                twitterBtn.classList.add('opacity-60', 'cursor-not-allowed');
             }
         }
 
         privacyCheck.addEventListener('click', () => {
             isAgreed = !isAgreed;
             privacyCheck.classList.toggle('checked', isAgreed);
-            updateAgreedState();
-        });
-
-        langToggleBtn.addEventListener('click', () => {
-            currentLang = currentLang === 'EN' ? 'AR' : 'EN';
-            const t = content[currentLang];
-            document.getElementById('main-title').innerHTML = t.welcome;
-            document.getElementById('sub-title').innerText = t.subtitle;
-            document.getElementById('login-label').innerText = t.loginTo;
-            document.getElementById('google-text').innerText = t.googleBtn;
-            langToggleBtn.innerText = t.nextLang;
-            document.body.dir = t.dir;
-            document.getElementById('header-container').className = `absolute top-0 left-0 w-full flex justify-between items-center p-6 sm:px-10 ${t.align}`;
+            updateButtons();
         });
 
         async function handleLogin(provider) {
@@ -119,26 +109,51 @@
             try {
                 const result = await signInWithPopup(auth, provider);
                 const user = result.user;
+                
+                // التأكد من حفظ البريد الإلكتروني وجميع البيانات في Firestore
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
+                
+                const userData = {
+                    uid: user.uid,
+                    displayName: user.displayName || 'مستخدم',
+                    email: user.email, // هذا هو البريد الإلكتروني
+                    photoURL: user.photoURL || '',
+                    lastLogin: new Date().toISOString()
+                };
+
                 if (!userSnap.exists()) {
-                    await setDoc(userRef, { uid: user.uid, displayName: user.displayName, email: user.email, photoURL: user.photoURL, balance: 20, subscription: "free", createdAt: new Date().toISOString() });
+                    // مستخدم جديد
+                    await setDoc(userRef, {
+                        ...userData,
+                        balance: 20,
+                        subscription: "free",
+                        createdAt: new Date().toISOString()
+                    });
                 } else {
-                    // Update email if changed
-                    await setDoc(userRef, { email: user.email }, { merge: true });
+                    // تحديث بيانات المستخدم الحالي (خاصة البريد)
+                    await setDoc(userRef, userData, { merge: true });
                 }
+                
                 navigateTo('main');
             } catch (error) {
-                alert("Error: " + error.message);
+                console.error("Login Error:", error);
+                alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
             }
         }
 
         googleBtn.addEventListener('click', () => handleLogin(googleProvider));
         twitterBtn.addEventListener('click', () => handleLogin(twitterProvider));
-        document.getElementById('view-privacy').addEventListener('click', (e) => { e.preventDefault(); navigateTo('privacy'); });
-        document.getElementById('view-terms').addEventListener('click', (e) => { e.preventDefault(); navigateTo('terms'); });
 
-        lucide.createIcons();
+        // روابط السياسات
+        document.getElementById('view-privacy').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateTo('privacy');
+        });
+        document.getElementById('view-terms').addEventListener('click', (e) => {
+            e.preventDefault();
+            navigateTo('terms');
+        });
     </script>
 </body>
 </html>

@@ -16,13 +16,25 @@ export function protectPage(pageName) {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     
+    // السماح بالوصول لصفحة تسجيل الدخول والسياسات حتى بدون ID لتسهيل الاستخدام الأولي
+    if (pageName === 'login' || pageName === 'privacy' || pageName === 'terms') {
+        if (!id) {
+            // إذا لم يوجد ID، نقوم بإضافته للرابط دون منع المستخدم
+            const newUrl = window.location.pathname + '?id=' + PAGE_IDS[pageName];
+            window.history.replaceState({}, '', newUrl);
+            return true;
+        }
+    }
+
     if (id !== PAGE_IDS[pageName]) {
-        // If ID is missing or incorrect, redirect to index or show error
-        document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;direction:rtl;"><h1>عذراً، الصفحة غير موجودة أو الرابط غير صالح.</h1></div>';
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 3000);
-        return false;
+        // إذا كان الـ ID خاطئاً في الصفحات الحساسة مثل main، نعيد التوجيه
+        if (pageName === 'main') {
+            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;direction:rtl;text-align:center;padding:20px;"><div><h1>عذراً، الرابط غير صالح.</h1><p>سيتم توجيهك لصفحة البداية...</p></div></div>';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+            return false;
+        }
     }
     return true;
 }
