@@ -110,20 +110,18 @@
                 const result = await signInWithPopup(auth, provider);
                 const user = result.user;
                 
-                // التأكد من حفظ البريد الإلكتروني وجميع البيانات في Firestore
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
                 
                 const userData = {
                     uid: user.uid,
                     displayName: user.displayName || 'مستخدم',
-                    email: user.email, // هذا هو البريد الإلكتروني
+                    email: user.email,
                     photoURL: user.photoURL || '',
                     lastLogin: new Date().toISOString()
                 };
 
                 if (!userSnap.exists()) {
-                    // مستخدم جديد
                     await setDoc(userRef, {
                         ...userData,
                         balance: 20,
@@ -131,11 +129,11 @@
                         createdAt: new Date().toISOString()
                     });
                 } else {
-                    // تحديث بيانات المستخدم الحالي (خاصة البريد)
                     await setDoc(userRef, userData, { merge: true });
                 }
                 
-                navigateTo('main');
+                // Direct navigation to main page with ID
+                window.location.href = 'afnan.html?id=app_v1_main_dashboard_secure_access_key_200';
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
