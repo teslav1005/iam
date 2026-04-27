@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afnan AI - Complete Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* تعديل جوهري هنا: لضمان استقلال كل صفحة وعدم تداخل الـ Flexbox الخاص بالدردشة */
+        .page:not(.active) {
+            display: none !important;
+        }
+
+        .page.active {
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-faded {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02);
+            border: 1px solid #f3f4f6;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .menu-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+        }
+
+        .menu-row:active { background-color: #f9fafb; }
+
+        .icon-wrapper {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+
+        /* Chat styles */
+        .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; margin-bottom: 10px; font-size: 0.95rem; }
+        .bot-msg { background: #e5e7eb; color: #374151; border-bottom-right-radius: 4px; align-self: flex-start; }
+        .user-msg { background: #2563eb; color: white; border-bottom-left-radius: 4px; align-self: flex-end; }
+
+        .btn-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .qr-scanner-bg {
+            background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%);
+        }
+
+        /* Subscription Badges */
+        .badge-popular {
+            background: #fbbf24;
+            color: #78350f;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            position: absolute;
+            top: -12px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-white lg:bg-gray-50">
+
+    <!-- الصفحة الرئيسية -->
+    <div id="home-page" class="page active">
+        <header class="p-6 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-100">
+            <div class="relative p-2 rounded-xl hover:bg-gray-100 transition cursor-pointer" onclick="showPage('notifications-page')">
+                <i data-lucide="bell-ring" class="w-6 h-6 text-gray-700"></i>
+                <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+            </div>
+            <h1 class="text-2xl font-black text-gray-900">Afnan</h1>
+            <div class="p-2 rounded-xl hover:bg-gray-100 transition cursor-pointer" onclick="showPage('chat-page')">
+                <i data-lucide="message-square-text" class="w-6 h-6 text-blue-600"></i>
+            </div>
+        </header>
+
+        <main class="p-5 pb-10">
+            <!-- الملف الشخصي -->
+            <div class="flex flex-col items-center mb-8">
+                <div class="relative">
+                    <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gray-100">
+                        <img src="https://ui-avatars.com/api/?name=Mahmou&background=000&color=fff&size=128" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <h2 class="mt-4 text-xl font-bold text-gray-900">Mahmoud</h2>
+                <p class="text-gray-400 text-xs font-medium">afnanaicom@gmail.com</p>
+            </div>
+
+            <!-- لوحة الرصيد -->
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="card-faded p-5 flex flex-col items-center">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">رصيدك</span>
+                    <div class="flex items-center gap-1.5 mt-1">
+                        <span class="text-2xl font-black text-gray-800">20</span>
+                        <i data-lucide="zap" class="w-5 h-5 text-amber-500 fill-amber-500"></i>
+                    </div>
+                </div>
+                <div onclick="showPage('pricing-page')" class="card-faded p-5 flex flex-col items-center bg-blue-600 text-white cursor-pointer active:scale-95">
+                    <span class="text-[10px] text-blue-200 font-bold uppercase tracking-widest">حالة الحساب</span>
+                    <span class="text-lg font-extrabold mt-1">اشترك الآن</span>
+                </div>
+            </div>
+
+            <!-- الروابط -->
+            <div class="space-y-4">
+                <div class="card-faded overflow-hidden">
+                    <div class="menu-row" onclick="showPage('profile-page')">
+                        <div class="icon-wrapper bg-blue-50 text-blue-600"><i data-lucide="user-2"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">حساب المستخدم</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                </div>
+
+                <div class="card-faded overflow-hidden">
+                    <div class="menu-row" onclick="showPage('schedule-page')">
+                        <div class="icon-wrapper bg-red-50 text-red-600"><i data-lucide="calendar-check"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">المهام المجدولة</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                    <div class="menu-row border-t border-gray-50" onclick="showPage('customize-page')">
+                        <div class="icon-wrapper bg-emerald-50 text-emerald-600"><i data-lucide="layout-template"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">تخصيص Afnan</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                    <div class="menu-row border-t border-gray-50" onclick="showPage('qr-page')">
+                        <div class="icon-wrapper bg-purple-50 text-purple-600"><i data-lucide="scan-qr-code"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">التكاملات</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                </div>
+
+                <div class="card-faded overflow-hidden">
+                    <div class="menu-row" onclick="showPage('privacy-page')">
+                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="shield-check"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">سياسة الخصوصية</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                    <div class="menu-row border-t border-gray-50" onclick="showPage('terms-page')">
+                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="file-text"></i></div>
+                        <span class="flex-grow font-bold text-gray-700">اتفاقية المستخدم</span>
+                        <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- صفحة Chat AI -->
+    <!-- بفضل تعديل الـ CSS، تصميم الـ flex سيعمل هنا بامتياز بدون مشاكل -->
+    <div id="chat-page" class="page bg-white flex flex-col h-screen">
+        <header class="p-5 flex items-center border-b bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <div class="flex-grow flex flex-col items-center">
+                <span class="font-bold">Afnan Chat AI</span>
+                <span class="text-[10px] text-green-500 font-bold uppercase tracking-tighter">متصل الآن</span>
+            </div>
+            <div class="w-6"></div>
+        </header>
+        <div class="flex-grow overflow-y-auto p-5 flex flex-col space-y-2 bg-gray-50">
+            <div class="chat-bubble bot-msg">أهلاً محمود! أنا مساعدك الذكي Afnan، كيف يمكنني مساعدتك اليوم في إدارة مهامك؟</div>
+            <div class="chat-bubble user-msg">أريد معرفة كم تبقى من رصيدي.</div>
+            <div class="chat-bubble bot-msg">رصيدك الحالي هو 20 نقطة. يمكنك زيارة صفحة الاشتراكات إذا كنت تود زيادة رصيدك.</div>
+        </div>
+        <div class="p-4 bg-white border-t flex items-center gap-3">
+            <input type="text" class="flex-grow bg-gray-100 rounded-2xl px-4 py-3 outline-none text-sm" placeholder="اكتب استفسارك هنا...">
+            <button class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg active:scale-90 transition">
+                <i data-lucide="send-horizontal" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- صفحة الإشعارات -->
+    <div id="notifications-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">الإشعارات</span>
+            <div class="w-6"></div>
+        </header>
+        <div class="p-5 space-y-4">
+            <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-3">
+                <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0"></i>
+                <p class="text-xs text-blue-800 leading-relaxed">تنبيه: لقد استهلكت 80% من رصيدك الحالي، يرجى الترقية لتجنب انقطاع الخدمة.</p>
+            </div>
+            <div class="p-4 bg-gray-50 rounded-2xl flex gap-3">
+                <i data-lucide="calendar" class="w-5 h-5 text-gray-400 flex-shrink-0"></i>
+                <div>
+                    <p class="text-xs font-bold text-gray-700">تمت جدولة مهمة جديدة</p>
+                    <p class="text-[10px] text-gray-400 mt-1">المستلم: +201015186799</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة الاشتراكات -->
+    <div id="pricing-page" class="page bg-gray-50 min-h-screen">
+        <header class="p-5 flex items-center border-b bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">اختر خطتك</span>
+            <div class="w-6"></div>
+        </header>
+        <div class="p-6 space-y-8">
+            <!-- الخطة 1 -->
+            <div class="card-faded p-6 relative">
+                <h3 class="text-xl font-bold text-gray-800">الأساسية</h3>
+                <div class="flex items-baseline gap-1 mt-2">
+                    <span class="text-3xl font-black text-blue-600">100</span>
+                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
+                </div>
+                <div class="h-px bg-gray-100 my-4"></div>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 200 رسالة شهرياً</li>
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط حساب واحد</li>
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="x" class="w-4 h-4 text-red-300"></i> بدون إرسال ريكورد</li>
+                </ul>
+                <button class="w-full py-3 bg-gray-100 rounded-xl mt-6 font-bold text-gray-800 active:scale-95">اشترِ الآن</button>
+            </div>
+
+            <!-- الخطة 2 (المتوسطة) -->
+            <div class="card-faded p-6 border-2 border-blue-500 relative shadow-blue-100 shadow-xl">
+                <span class="badge-popular">الأفضل مبيعاً</span>
+                <h3 class="text-xl font-bold text-gray-800">الاحترافية</h3>
+                <div class="flex items-baseline gap-1 mt-2">
+                    <span class="text-3xl font-black text-blue-600">500</span>
+                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
+                </div>
+                <div class="h-px bg-gray-100 my-4"></div>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 1000 رسالة شهرياً</li>
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط 5 حسابات</li>
+                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> إرسال ريكوردات (Audio)</li>
+                </ul>
+                <button class="w-full py-3 btn-gradient rounded-xl mt-6 font-bold text-white active:scale-95">اشترِ الآن</button>
+            </div>
+
+            <!-- الخطة 3 -->
+            <div class="card-faded p-6 bg-slate-900 text-white border-none">
+                <h3 class="text-xl font-bold">المؤسسات</h3>
+                <p class="text-xs text-slate-400 mt-2">للحصول على خطة مخصصة بالكامل تواصل مع فريق المبيعات.</p>
+                <a href="https://wa.me/201015186799" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl mt-6 font-bold text-center active:scale-95">تواصل عبر واتساب</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- صفحة QR والتكاملات -->
+    <div id="qr-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="closeQR()"></i>
+            <span class="flex-grow text-center font-bold">ربط حساب واتساب</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-10 flex flex-col items-center justify-center qr-scanner-bg min-h-[80vh]">
+            <div class="p-6 bg-white rounded-[40px] shadow-2xl border-8 border-gray-50 mb-8 animate-pulse">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect" id="qr-image" class="w-64 h-64">
+            </div>
+            <div class="flex items-center gap-3 px-4 py-2 bg-blue-50 rounded-full mb-10">
+                <div class="w-2 h-2 bg-blue-600 rounded-full animate-ping"></div>
+                <span class="text-xs font-bold text-blue-600">تحديث الكود خلال: <span id="qr-timer">60</span> ثانية</span>
+            </div>
+            <div class="w-full space-y-3">
+                <button class="w-full py-4 bg-green-600 text-white font-black rounded-2xl shadow-xl active:scale-95 transition">بدء الاتصال</button>
+                <button class="w-full py-4 text-gray-400 font-bold" onclick="closeQR()">إلغاء العملية</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- صفحات السياسات والخصوصية -->
+    <div id="privacy-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">سياسة الخصوصية</span>
+            <div class="w-6"></div>
+        </header>
+        <div class="p-6 prose text-xs text-gray-500 leading-loose">
+            <p class="font-bold text-gray-800 mb-4">نحن نأخذ خصوصيتك على محمل الجد.</p>
+            <p>عند استخدام Afnan، فإننا نقوم بتشفير جميع البيانات الخاصة بك. لا يتم حفظ رسائل الواتساب الخاصة بك في خوادمنا بل يتم تمريرها فقط عبر التكاملات المشفرة. يحق لنا جمع بيانات الاستخدام العامة لتحسين جودة النموذج الذكي.</p>
+            <p class="mt-4">نحن لا نشارك بريدك الإلكتروني أو بيانات ربط الحسابات مع أي طرف ثالث تحت أي ظرف من الظروف.</p>
+        </div>
+    </div>
+
+    <div id="terms-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">اتفاقية المستخدم</span>
+            <div class="w-6"></div>
+        </header>
+        <div class="p-6 text-xs text-gray-500 leading-loose">
+            <p class="font-bold text-gray-800 mb-4">باستخدامك للتطبيق أنت توافق على:</p>
+            <ul class="list-disc pr-4 space-y-2">
+                <li>عدم استخدام الخدمة لإرسال رسائل مزعجة (Spam).</li>
+                <li>تحمل المسؤولية الكاملة عن المحتوى الذي تتم جدولته.</li>
+                <li>احترام سياسة واتساب الرسمية في التعامل مع الحسابات.</li>
+                <li>أن رصيد النقاط غير قابل للاسترجاع بعد استخدامه.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- صفحة المهام المجدولة -->
+    <div id="schedule-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">جدولة مهمة جديدة</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-6 space-y-6">
+            <div>
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">رقم المستلم</label>
+                <input type="tel" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none focus:border-blue-500" placeholder="+20 100 000 0000">
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <div>
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ساعة</label>
+                    <input type="number" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">دقيقة</label>
+                    <input type="number" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ثانية</label>
+                    <input type="number" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                </div>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">تاريخ الإرسال</label>
+                <input type="date" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none">
+            </div>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <span class="text-sm font-bold text-gray-700">تكرار هذه المهمة يومياً؟</span>
+                <input type="checkbox" class="w-5 h-5 accent-blue-600 rounded">
+            </div>
+            <button class="w-full py-5 btn-gradient text-white font-black rounded-2xl mt-4 active:scale-95">حفظ المهمة</button>
+        </main>
+    </div>
+
+    <!-- صفحة تخصيص Afnan -->
+    <div id="customize-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">تخصيص Afnan الذكي</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-6 space-y-6">
+            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
+                <p class="text-[10px] text-emerald-700 leading-relaxed">هنا يمكنك تعليم Afnan كيف يرد على عملائك وما هي القواعد التي يجب اتباعها.</p>
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">اسم المعرفة</label>
+                <input type="text" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: الرد الترحيبي">
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">استخدم عندما (كلمات مفتاحية) *</label>
+                <input type="text" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: السلام عليكم، أهلاً، مرحباً">
+            </div>
+            <div>
+                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">المحتوى التعليمي *</label>
+                <textarea class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none h-40" placeholder="اكتب التعليمات التي يجب أن يتبعها البوت هنا..."></textarea>
+            </div>
+            <button class="w-full py-5 bg-gray-800 text-white font-black rounded-2xl mt-4 active:scale-95">حفظ التغييرات</button>
+        </main>
+    </div>
+
+    <!-- صفحة الملف الشخصي -->
+    <div id="profile-page" class="page bg-white min-h-screen">
+        <header class="p-5 flex items-center border-b">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold">حسابي الشخصي</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-6 flex flex-col items-center">
+            <div class="relative group cursor-pointer">
+                <div class="w-28 h-28 rounded-full border-8 border-gray-50 shadow-inner overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=Mahmou&background=000&color=fff&size=200" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full border-4 border-white">
+                    <i data-lucide="pencil" class="w-3 h-3"></i>
+                </div>
+            </div>
+            <div class="w-full mt-10 space-y-3">
+                <div class="flex flex-col gap-1 px-2">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase">الاسم الكامل</span>
+                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold flex justify-between">
+                        <span>Mahmoud</span>
+                        <i data-lucide="edit-3" class="w-4 h-4 text-gray-300"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1 px-2">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase">البريد الإلكتروني</span>
+                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-400">
+                        afnanaicom@gmail.com
+                    </div>
+                </div>
+            </div>
+            <div class="w-full mt-10 space-y-3 px-2">
+                <button class="w-full py-4 text-red-500 font-bold bg-red-50 rounded-2xl border border-red-100 flex items-center justify-center gap-2">
+                    <i data-lucide="user-minus" class="w-5 h-5"></i> حذف الحساب
+                </button>
+                <button class="w-full py-4 text-gray-500 font-bold bg-white rounded-2xl border border-gray-100 flex items-center justify-center gap-2">
+                    <i data-lucide="log-out" class="w-5 h-5"></i> تسجيل الخروج
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // تهيئة الأيقونات
+        lucide.createIcons();
+
+        // منطق تبديل الصفحات
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+            lucide.createIcons();
+            
+            // بدء مؤقت الـ QR إذا فتحت الصفحة الخاصة به
+            if(pageId === 'qr-page') startQRTimer();
+        }
+
+        // إغلاق الـ QR وإيقاف المؤقت
+        let qrInterval;
+        function closeQR() {
+            clearInterval(qrInterval);
+            showPage('home-page');
+        }
+
+        function startQRTimer() {
+            let timeLeft = 60;
+            const timerEl = document.getElementById('qr-timer');
+            const qrImg = document.getElementById('qr-image');
+            
+            clearInterval(qrInterval);
+            qrInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    timeLeft = 60;
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect-${Date.now()}`;
+                }
+            }, 1000);
+        }
+
+        // التعامل مع لمس الشاشة (تحسين التفاعل على الجوال)
+        document.addEventListener('touchstart', function() {}, true);
+    </script>
+</body>
+</html>
