@@ -82,6 +82,11 @@
             top: -12px;
             right: 20px;
         }
+
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: white;
+        }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-white lg:bg-gray-50">
@@ -316,39 +321,64 @@
 
     <!-- صفحة المهام المجدولة -->
     <div id="schedule-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">جدولة مهمة جديدة</span>
+            <span class="flex-grow text-center font-bold">المهام المجدولة</span>
             <div class="w-6"></div>
         </header>
-        <main class="p-6 space-y-6">
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">رقم المستلم</label>
-                <input type="tel" id="task-phone" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none focus:border-blue-500" placeholder="+20 100 000 0000">
-            </div>
-            <div class="grid grid-cols-3 gap-3">
+        
+        <!-- Tabs -->
+        <div class="flex p-2 bg-gray-100 m-4 rounded-2xl gap-1">
+            <button onclick="switchTaskTab('create')" id="tab-create" class="tab-btn active flex-grow py-3 rounded-xl text-xs font-bold transition">إنشاء مهمة</button>
+            <button onclick="switchTaskTab('pending')" id="tab-pending" class="tab-btn flex-grow py-3 rounded-xl text-xs font-bold transition">قيد الانتظار</button>
+            <button onclick="switchTaskTab('completed')" id="tab-completed" class="tab-btn flex-grow py-3 rounded-xl text-xs font-bold transition">المنجزة</button>
+        </div>
+
+        <main class="p-6 pt-2">
+            <!-- قسم إنشاء مهمة -->
+            <div id="task-section-create" class="task-section space-y-6">
                 <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ساعة</label>
-                    <input type="number" id="task-hour" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">رقم المستلم</label>
+                    <input type="tel" id="task-phone" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none focus:border-blue-500" placeholder="+20 100 000 0000">
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ساعة</label>
+                        <input type="number" id="task-hour" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">دقيقة</label>
+                        <input type="number" id="task-minute" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ثانية</label>
+                        <input type="number" id="task-second" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                    </div>
                 </div>
                 <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">دقيقة</label>
-                    <input type="number" id="task-minute" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">تاريخ الإرسال</label>
+                    <input type="date" id="task-date" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none">
                 </div>
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ثانية</label>
-                    <input type="number" id="task-second" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                    <span class="text-sm font-bold text-gray-700">تكرار هذه المهمة يومياً؟</span>
+                    <input type="checkbox" id="task-repeat" class="w-5 h-5 accent-blue-600 rounded">
+                </div>
+                <button id="save-task-btn" class="w-full py-5 btn-gradient text-white font-black rounded-2xl mt-4 active:scale-95">حفظ المهمة</button>
+            </div>
+
+            <!-- قسم المهام قيد الانتظار -->
+            <div id="task-section-pending" class="task-section hidden space-y-4">
+                <div id="pending-tasks-list" class="space-y-3">
+                    <!-- سيتم تحميل المهام هنا -->
                 </div>
             </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">تاريخ الإرسال</label>
-                <input type="date" id="task-date" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none">
+
+            <!-- قسم المهام المنجزة -->
+            <div id="task-section-completed" class="task-section hidden space-y-4">
+                <div id="completed-tasks-list" class="space-y-3">
+                    <!-- سيتم تحميل المهام هنا -->
+                </div>
             </div>
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <span class="text-sm font-bold text-gray-700">تكرار هذه المهمة يومياً؟</span>
-                <input type="checkbox" id="task-repeat" class="w-5 h-5 accent-blue-600 rounded">
-            </div>
-            <button id="save-task-btn" class="w-full py-5 btn-gradient text-white font-black rounded-2xl mt-4 active:scale-95">حفظ المهمة</button>
         </main>
     </div>
 
@@ -435,6 +465,7 @@
                 currentUser = user;
                 syncUserData(user.uid);
                 syncNotifications(user.uid);
+                syncTasks(user.uid);
             } else {
                 navigateTo('login');
             }
@@ -512,12 +543,49 @@
             });
         }
 
+        async function syncTasks(uid) {
+            const q = query(collection(db, "tasks"), where("userId", "==", uid));
+            onSnapshot(q, (snapshot) => {
+                const pendingList = document.getElementById('pending-tasks-list');
+                const completedList = document.getElementById('completed-tasks-list');
+                pendingList.innerHTML = '';
+                completedList.innerHTML = '';
+
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    const taskHtml = `
+                        <div class="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm flex justify-between items-center">
+                            <div>
+                                <p class="text-xs font-bold text-gray-800">${data.phone}</p>
+                                <p class="text-[10px] text-gray-400 mt-1">${data.date} | ${data.time}</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold ${data.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
+                                ${data.status === 'completed' ? 'منجزة' : 'قيد الانتظار'}
+                            </span>
+                        </div>
+                    `;
+                    if (data.status === 'completed') completedList.innerHTML += taskHtml;
+                    else pendingList.innerHTML += taskHtml;
+                });
+                
+                if (pendingList.innerHTML === '') pendingList.innerHTML = '<p class="text-center text-xs text-gray-400 py-10">لا توجد مهام قيد الانتظار</p>';
+                if (completedList.innerHTML === '') completedList.innerHTML = '<p class="text-center text-xs text-gray-400 py-10">لا توجد مهام منجزة</p>';
+            });
+        }
+
         window.showPage = function(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             window.scrollTo(0,0);
             lucide.createIcons();
             if(pageId === 'qr-page') startQRTimer();
+        };
+
+        window.switchTaskTab = function(tabId) {
+            document.querySelectorAll('.task-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`task-section-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
         };
 
         let qrInterval;
@@ -570,7 +638,7 @@
                 status: 'pending', createdAt: new Date().toISOString()
             });
             alert('تم حفظ المهمة بنجاح');
-            showPage('home-page');
+            switchTaskTab('pending');
         });
 
         document.getElementById('save-custom-btn').addEventListener('click', async () => {
