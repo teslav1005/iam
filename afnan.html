@@ -171,13 +171,16 @@
     </div>
 
     <script type="module">
-        import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, deleteDoc } from './api.js';
+        import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, deleteDoc, setDoc } from './api.js';
         import { protectPage, navigateTo } from './router.js';
 
-        if (!protectPage('main')) return;
+        if (!protectPage('main')) {
+            // No return here to avoid blank page, router handles redirect
+        }
 
         lucide.createIcons();
         let currentUser = null;
+        let modalCallback = null;
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -190,43 +193,76 @@
             }
         });
 
-        function syncUserData(uid) {
-            // عرض البيانات الأولية من حساب تسجيل الدخول فوراً قبل جلبها من Firestore
+        async function syncUserData(uid) {
+            // 1. عرض البيانات من Auth فوراً لتجنب "جاري التحميل"
+            const updateUI = (data) => {
+                document.getElementById('user-name').innerText = data.displayName || 'مستخدم';
+                document.getElementById('user-email').innerText = data.email || '';
+                if (data.photoURL) document.getElementById('user-avatar').src = data.photoURL;
+                if (data.balance !== undefined) document.getElementById('user-balance').innerText = data.balance;
+                if (data.subscription !== undefined) {
+                    document.getElementById('user-subscription').innerText = data.subscription === 'free' ? 'اشترك الآن' : 'مشترك (' + data.subscription + ')';
+                }
+            };
+
             if (currentUser) {
-                document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
-                document.getElementById('user-email').innerText = currentUser.email || '';
-                if (currentUser.photoURL) document.getElementById('user-avatar').src = currentUser.photoURL;
+                updateUI({
+                    displayName: currentUser.displayName,
+                    email: currentUser.email,
+                    photoURL: currentUser.photoURL
+                });
             }
 
-            onSnapshot(doc(db, "users", uid), (docSnap) => {
+            // 2. الاستماع للتغييرات في Firestore
+            const userRef = doc(db, "users", uid);
+            onSnapshot(userRef, async (docSnap) => {
                 if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    document.getElementById('user-name').innerText = data.displayName || 'مستخدم';
-                    document.getElementById('user-email').innerText = data.email || '';
-                    document.getElementById('user-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + (data.displayName || 'User');
-                    document.getElementById('user-balance').innerText = data.balance || 0;
-                    document.getElementById('user-subscription').innerText = data.subscription === 'free' ? 'اشترك الآن' : 'مشترك (' + data.subscription + ')';
+                    updateUI(docSnap.data());
                 } else {
-                    console.log("No such document in Firestore!");
+                    console.log("User document missing, creating one...");
+                    // حل جذري: إذا فقد المستند لأي سبب، نقوم بإنشائه فوراً
+                    const userData = {
+                        uid: currentUser.uid,
+                        displayName: currentUser.displayName || 'مستخدم',
+                        email: currentUser.email,
+                        photoURL: currentUser.photoURL || '',
+                        balance: 20,
+                        subscription: "free",
+                        lastLogin: new Date().toISOString(),
+                        createdAt: new Date().toISOString()
+                    };
+                    try {
+                        await setDoc(userRef, userData);
+                    } catch (e) {
+                        console.error("Error creating missing user doc:", e);
+                    }
                 }
             }, (error) => {
-                console.error("Sync User Data Error:", error);
-                // في حال وجود خطأ في الصلاحيات، نعرض بيانات الحساب الأساسية
-                if (currentUser) {
-                    document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
-                    document.getElementById('user-email').innerText = currentUser.email || '';
+                console.error("Firestore Sync Error:", error);
+                if (error.code === 'permission-denied') {
+                    console.warn("Permission denied. Check Firestore Rules or Auth State.");
                 }
             });
-        }function showConfirm(title, desc, callback) {
+        }
+
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0, 0);
+        };
+
+        function showConfirm(title, desc, callback) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-desc').innerText = desc;
             const modal = document.getElementById('confirm-modal');
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modalCallback = callback;
         }
+
         function hideConfirm() {
             document.getElementById('confirm-modal').classList.add('opacity-0', 'pointer-events-none');
         }
+
         document.getElementById('modal-no').addEventListener('click', hideConfirm);
         document.getElementById('modal-yes').addEventListener('click', () => {
             if (modalCallback) modalCallback();
@@ -242,7 +278,6 @@
 
         window.handleDeleteAccount = function() {
             showConfirm('حذف الحساب', 'تحذير: سيتم حذف جميع بياناتك ومهامك نهائياً. هل أنت موافق؟', async () => {
-                // Logic to delete from Firestore then Auth
                 await deleteDoc(doc(db, "users", currentUser.uid));
                 await currentUser.delete();
                 navigateTo('login');
@@ -280,14 +315,12 @@
             input.value = '';
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Simulate AI/WhatsApp response
             setTimeout(() => {
                 chatBox.innerHTML += `<div class="chat-bubble bot-msg">جاري معالجة طلبك عبر الوكيل المخصص...</div>`;
                 chatBox.scrollTop = chatBox.scrollHeight;
             }, 1000);
         });
 
-        // Placeholder for other sync functions
         function syncTasks(uid) {}
         function syncNotifications(uid) {}
     </script>
