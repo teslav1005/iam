@@ -113,10 +113,13 @@
                 const userRef = doc(db, "users", user.uid);
                 const userSnap = await getDoc(userRef);
                 
+                // استخراج البريد الإلكتروني بشكل مؤكد
+                const userEmail = user.email || (user.providerData && user.providerData[0] ? user.providerData[0].email : null);
+                
                 const userData = {
                     uid: user.uid,
                     displayName: user.displayName || 'مستخدم',
-                    email: user.email,
+                    email: userEmail, // حفظ البريد المستخرج
                     photoURL: user.photoURL || '',
                     lastLogin: new Date().toISOString()
                 };
@@ -129,6 +132,7 @@
                         createdAt: new Date().toISOString()
                     });
                 } else {
+                    // تحديث البيانات مع التأكد من عدم مسح البريد إذا كان موجوداً مسبقاً
                     await setDoc(userRef, userData, { merge: true });
                 }
                 

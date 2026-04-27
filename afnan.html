@@ -191,28 +191,33 @@
         });
 
         function syncUserData(uid) {
-            onSnapshot(doc(db, "users", uid), (doc) => {
-                if (doc.exists()) {
-                    const data = doc.data();
+            // عرض البيانات الأولية من حساب تسجيل الدخول فوراً قبل جلبها من Firestore
+            if (currentUser) {
+                document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
+                document.getElementById('user-email').innerText = currentUser.email || '';
+                if (currentUser.photoURL) document.getElementById('user-avatar').src = currentUser.photoURL;
+            }
+
+            onSnapshot(doc(db, "users", uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
                     document.getElementById('user-name').innerText = data.displayName || 'مستخدم';
-                    document.getElementById('user-email').innerText = data.email;
-                    document.getElementById('user-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + data.displayName;
+                    document.getElementById('user-email').innerText = data.email || '';
+                    document.getElementById('user-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=' + (data.displayName || 'User');
                     document.getElementById('user-balance').innerText = data.balance || 0;
                     document.getElementById('user-subscription').innerText = data.subscription === 'free' ? 'اشترك الآن' : 'مشترك (' + data.subscription + ')';
+                } else {
+                    console.log("No such document in Firestore!");
+                }
+            }, (error) => {
+                console.error("Sync User Data Error:", error);
+                // في حال وجود خطأ في الصلاحيات، نعرض بيانات الحساب الأساسية
+                if (currentUser) {
+                    document.getElementById('user-name').innerText = currentUser.displayName || 'مستخدم';
+                    document.getElementById('user-email').innerText = currentUser.email || '';
                 }
             });
-        }
-
-        window.showPage = function(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0,0);
-            lucide.createIcons();
-        };
-
-        // نظام الـ Modal الشفاف
-        let modalCallback = null;
-        function showConfirm(title, desc, callback) {
+        }function showConfirm(title, desc, callback) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-desc').innerText = desc;
             const modal = document.getElementById('confirm-modal');
