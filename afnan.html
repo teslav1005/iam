@@ -9,20 +9,32 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
         
+        :root {
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #f3f4f6;
+        }
+
+        .dark-mode {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
         body {
             font-family: 'Noto Sans Arabic', sans-serif;
-            background-color: #f9fafb;
-            color: #111827;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .page:not(.active) {
-            display: none !important;
-        }
-
-        .page.active {
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .page:not(.active) { display: none !important; }
+        .page.active { animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -30,10 +42,10 @@
         }
 
         .card-faded {
-            background: white;
+            background: var(--card-bg);
             border-radius: 28px;
             box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02);
-            border: 1px solid #f3f4f6;
+            border: 1px solid var(--border-color);
             margin-bottom: 1rem;
             transition: all 0.3s;
         }
@@ -45,18 +57,8 @@
             cursor: pointer;
         }
 
-        .menu-row:active { background-color: #f9fafb; }
-
-        .icon-wrapper {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 15px;
-            flex-shrink: 0;
-        }
+        .icon-img { width: 40px; height: 40px; object-fit: contain; margin-left: 15px; flex-shrink: 0; }
+        .sub-badge { width: 20px; height: 20px; object-fit: contain; margin-right: 5px; }
 
         .chat-bubble { padding: 12px 16px; border-radius: 20px; max-width: 80%; margin-bottom: 10px; font-size: 0.95rem; }
         .bot-msg { background: #e5e7eb; color: #374151; border-bottom-right-radius: 4px; align-self: flex-start; }
@@ -67,38 +69,47 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
-        .qr-scanner-bg {
-            background: radial-gradient(circle, #ffffff 0%, #f1f5f9 100%);
-        }
-
-        .badge-popular {
-            background: #fbbf24;
-            color: #78350f;
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            position: absolute;
-            top: -12px;
-            right: 20px;
-        }
-
-        .tab-btn.active {
-            background-color: #2563eb;
+        .tab-btn.active { background-color: #2563eb; color: white; }
+        
+        /* Success Animation */
+        .success-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
             color: white;
+            padding: 12px 24px;
+            border-radius: 999px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            animation: fadeInOut 3s forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, -20px); }
+            15% { opacity: 1; transform: translate(-50%, 0); }
+            85% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, -20px); }
         }
     </style>
 </head>
-<body class="max-w-md mx-auto min-h-screen relative shadow-2xl bg-white lg:bg-gray-50">
+<body class="max-w-md mx-auto min-h-screen relative shadow-2xl lg:bg-gray-50">
+
+    <div id="success-toast" class="success-toast">تمت العملية بنجاح!</div>
 
     <!-- الصفحة الرئيسية -->
     <div id="home-page" class="page active">
-        <header class="p-6 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-100">
+        <header class="p-6 flex justify-between items-center sticky top-0 bg-inherit backdrop-blur-md z-40 border-b border-gray-100">
             <div class="relative p-2 rounded-xl hover:bg-gray-100 transition cursor-pointer" onclick="showPage('notifications-page')">
-                <i data-lucide="bell-ring" class="w-6 h-6 text-gray-700"></i>
+                <i data-lucide="bell-ring" class="w-6 h-6"></i>
                 <span id="notif-badge" class="hidden absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
             </div>
-            <h1 class="text-2xl font-black text-gray-900">Afnan</h1>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-100 dark:bg-slate-800"><i data-lucide="moon" class="w-4 h-4"></i></button>
+                <button onclick="toggleLanguage()" class="p-2 rounded-lg bg-gray-100 dark:bg-slate-800 text-[10px] font-bold">EN</button>
+            </div>
+            <h1 class="text-2xl font-black" data-i18n="app_name">Afnan</h1>
             <div class="p-2 rounded-xl hover:bg-gray-100 transition cursor-pointer" onclick="showPage('chat-page')">
                 <i data-lucide="message-square-text" class="w-6 h-6 text-blue-600"></i>
             </div>
@@ -111,23 +122,27 @@
                     <div class="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-gray-100">
                         <img id="user-avatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff&size=128" class="w-full h-full object-cover">
                     </div>
+                    <img id="sub-icon-badge" src="" class="sub-badge absolute bottom-0 right-0 hidden">
                 </div>
-                <h2 id="user-name" class="mt-4 text-xl font-bold text-gray-900">جاري التحميل...</h2>
+                <h2 id="user-name" class="mt-4 text-xl font-bold" data-i18n="loading">جاري التحميل...</h2>
                 <p id="user-email" class="text-gray-400 text-xs font-medium">...</p>
             </div>
 
             <!-- لوحة الرصيد -->
             <div class="grid grid-cols-2 gap-4 mb-8">
                 <div class="card-faded p-5 flex flex-col items-center">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">رصيدك</span>
+                    <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest" data-i18n="balance">رصيدك</span>
                     <div class="flex items-center gap-1.5 mt-1">
-                        <span id="user-balance" class="text-2xl font-black text-gray-800">0</span>
+                        <span id="user-balance" class="text-2xl font-black">0</span>
                         <i data-lucide="zap" class="w-5 h-5 text-amber-500 fill-amber-500"></i>
                     </div>
                 </div>
                 <div onclick="showPage('pricing-page')" class="card-faded p-5 flex flex-col items-center bg-blue-600 text-white cursor-pointer active:scale-95">
-                    <span class="text-[10px] text-blue-200 font-bold uppercase tracking-widest">حالة الحساب</span>
-                    <span id="user-subscription" class="text-lg font-extrabold mt-1">اشترك الآن</span>
+                    <span class="text-[10px] text-blue-200 font-bold uppercase tracking-widest" data-i18n="account_status">حالة الحساب</span>
+                    <div class="flex items-center gap-1 mt-1">
+                        <img id="sub-btn-img" src="https://i.postimg.cc/HrmYK0VR/pls.png" class="h-6 object-contain">
+                        <span id="user-subscription" class="text-sm font-extrabold"></span>
+                    </div>
                 </div>
             </div>
 
@@ -135,47 +150,47 @@
             <div class="space-y-4">
                 <div class="card-faded overflow-hidden">
                     <div class="menu-row" onclick="showPage('profile-page')">
-                        <div class="icon-wrapper bg-blue-50 text-blue-600"><i data-lucide="user-2"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">حساب المستخدم</span>
+                        <div class="icon-wrapper bg-blue-50 text-blue-600 p-2 rounded-xl ml-4"><i data-lucide="user-2"></i></div>
+                        <span class="flex-grow font-bold" data-i18n="user_account">حساب المستخدم</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                 </div>
 
                 <div class="card-faded overflow-hidden">
                     <div class="menu-row" onclick="showPage('schedule-page')">
-                        <div class="icon-wrapper bg-red-50 text-red-600"><i data-lucide="calendar-check"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">المهام المجدولة</span>
+                        <img src="https://i.postimg.cc/Mnw640vC/we.png" class="icon-img">
+                        <span class="flex-grow font-bold" data-i18n="scheduled_tasks">المهام المجدولة</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                     <div class="menu-row border-t border-gray-50" onclick="showPage('customize-page')">
-                        <div class="icon-wrapper bg-emerald-50 text-emerald-600"><i data-lucide="layout-template"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">تخصيص Afnan</span>
+                        <img src="https://i.postimg.cc/K1bGV7R9/ai.png" class="icon-img">
+                        <span class="flex-grow font-bold" data-i18n="customize_afnan">تخصيص Afnan</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                     <div class="menu-row border-t border-gray-50" onclick="showPage('qr-page')">
-                        <div class="icon-wrapper bg-purple-50 text-purple-600"><i data-lucide="scan-qr-code"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">التكاملات</span>
+                        <img src="https://i.postimg.cc/zyNzMwVx/qr.png" class="icon-img">
+                        <span class="flex-grow font-bold" data-i18n="integrations">التكاملات</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                 </div>
 
                 <div class="card-faded overflow-hidden">
                     <div class="menu-row" onclick="showPage('privacy-page')">
-                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="shield-check"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">سياسة الخصوصية</span>
+                        <div class="icon-wrapper bg-gray-50 text-gray-600 p-2 rounded-xl ml-4"><i data-lucide="shield-check"></i></div>
+                        <span class="flex-grow font-bold" data-i18n="privacy_policy">سياسة الخصوصية</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                     <div class="menu-row border-t border-gray-50" onclick="showPage('terms-page')">
-                        <div class="icon-wrapper bg-gray-50 text-gray-600"><i data-lucide="file-text"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">اتفاقية المستخدم</span>
+                        <div class="icon-wrapper bg-gray-50 text-gray-600 p-2 rounded-xl ml-4"><i data-lucide="file-text"></i></div>
+                        <span class="flex-grow font-bold" data-i18n="user_agreement">اتفاقية المستخدم</span>
                         <i data-lucide="chevron-left" class="w-4 h-4 text-gray-300"></i>
                     </div>
                 </div>
 
                 <div class="card-faded overflow-hidden">
                     <div class="menu-row" onclick="window.open('https://wa.me/201015186799', '_blank')">
-                        <div class="icon-wrapper bg-green-50 text-green-600"><i data-lucide="phone"></i></div>
-                        <span class="flex-grow font-bold text-gray-700">خدمة العملاء (واتساب)</span>
+                        <div class="icon-wrapper bg-green-50 text-green-600 p-2 rounded-xl ml-4"><i data-lucide="phone"></i></div>
+                        <span class="flex-grow font-bold" data-i18n="customer_service">خدمة العملاء (واتساب)</span>
                         <i data-lucide="external-link" class="w-4 h-4 text-gray-300"></i>
                     </div>
                 </div>
@@ -184,20 +199,20 @@
     </div>
 
     <!-- صفحة Chat AI -->
-    <div id="chat-page" class="page bg-white flex flex-col h-screen">
-        <header class="p-5 flex items-center border-b bg-white">
+    <div id="chat-page" class="page bg-white dark:bg-slate-900 flex flex-col h-screen">
+        <header class="p-5 flex items-center border-b bg-inherit">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
             <div class="flex-grow flex flex-col items-center">
                 <span class="font-bold">Afnan Chat AI</span>
-                <span class="text-[10px] text-green-500 font-bold uppercase tracking-tighter">متصل الآن</span>
+                <span class="text-[10px] text-green-500 font-bold uppercase tracking-tighter" data-i18n="online">متصل الآن</span>
             </div>
             <div class="w-6"></div>
         </header>
-        <div id="chat-messages" class="flex-grow overflow-y-auto p-5 flex flex-col space-y-2 bg-gray-50">
-            <div class="chat-bubble bot-msg">أهلاً! أنا مساعدك الذكي Afnan، كيف يمكنني مساعدتك اليوم في إدارة مهامك؟</div>
+        <div id="chat-messages" class="flex-grow overflow-y-auto p-5 flex flex-col space-y-2 bg-gray-50 dark:bg-slate-800">
+            <div class="chat-bubble bot-msg" data-i18n="chat_welcome">أهلاً! أنا مساعدك الذكي Afnan، كيف يمكنني مساعدتك اليوم؟</div>
         </div>
-        <div class="p-4 bg-white border-t flex items-center gap-3">
-            <input type="text" id="chat-input" class="flex-grow bg-gray-100 rounded-2xl px-4 py-3 outline-none text-sm" placeholder="اكتب استفسارك هنا...">
+        <div class="p-4 bg-inherit border-t flex items-center gap-3">
+            <input type="text" id="chat-input" class="flex-grow bg-gray-100 dark:bg-slate-700 rounded-2xl px-4 py-3 outline-none text-sm" placeholder="اكتب استفسارك هنا...">
             <button id="send-chat-btn" class="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg active:scale-90 transition">
                 <i data-lucide="send-horizontal" class="w-5 h-5"></i>
             </button>
@@ -205,249 +220,155 @@
     </div>
 
     <!-- صفحة الإشعارات -->
-    <div id="notifications-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
+    <div id="notifications-page" class="page bg-white dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-inherit z-10">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">الإشعارات</span>
+            <span class="flex-grow text-center font-bold" data-i18n="notifications">الإشعارات</span>
             <div class="w-6"></div>
         </header>
-        <div id="notifications-list" class="p-5 space-y-4">
-            <!-- سيتم تحميل الإشعارات هنا -->
-        </div>
+        <div id="notifications-list" class="p-5 space-y-4"></div>
     </div>
 
     <!-- صفحة الاشتراكات -->
-    <div id="pricing-page" class="page bg-gray-50 min-h-screen">
-        <header class="p-5 flex items-center border-b bg-white">
+    <div id="pricing-page" class="page bg-gray-50 dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b bg-inherit">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">اختر خطتك</span>
+            <span class="flex-grow text-center font-bold" data-i18n="choose_plan">اختر خطتك</span>
             <div class="w-6"></div>
         </header>
         <div class="p-6 space-y-8">
             <!-- الخطة 1 -->
             <div class="card-faded p-6 relative">
-                <h3 class="text-xl font-bold text-gray-800">الأساسية</h3>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-black text-blue-600">100</span>
-                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold" data-i18n="basic_plan">الأساسية</h3>
+                        <div class="flex items-baseline gap-1 mt-2">
+                            <span class="text-3xl font-black text-blue-600">100</span>
+                            <span class="text-xs text-gray-400 font-bold" data-i18n="currency_month">ج.م / شهر</span>
+                        </div>
+                    </div>
+                    <img src="https://i.postimg.cc/jDTx96D0/co.png" class="w-12 h-12 object-contain">
                 </div>
                 <div class="h-px bg-gray-100 my-4"></div>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 200 رسالة شهرياً</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط حساب واحد</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="x" class="w-4 h-4 text-red-300"></i> بدون إرسال ريكورد</li>
+                <ul class="space-y-3 text-xs">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 200 رسالة شهرياً</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط حساب واحد</li>
                 </ul>
-                <button class="w-full py-3 bg-gray-100 rounded-xl mt-6 font-bold text-gray-800 active:scale-95">اشترِ الآن</button>
+                <button onclick="subscribe('co')" class="w-full mt-6 active:scale-95 transition">
+                    <img src="https://i.postimg.cc/5XJ4G567/pco.png" class="w-full h-14 object-contain">
+                </button>
             </div>
 
-            <!-- الخطة 2 (المتوسطة) -->
+            <!-- الخطة 2 -->
             <div class="card-faded p-6 border-2 border-blue-500 relative shadow-blue-100 shadow-xl">
-                <span class="badge-popular">الأفضل مبيعاً</span>
-                <h3 class="text-xl font-bold text-gray-800">الاحترافية</h3>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-black text-blue-600">500</span>
-                    <span class="text-xs text-gray-400 font-bold">ج.م / شهر</span>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xl font-bold" data-i18n="pro_plan">الاحترافية</h3>
+                        <div class="flex items-baseline gap-1 mt-2">
+                            <span class="text-3xl font-black text-blue-600">500</span>
+                            <span class="text-xs text-gray-400 font-bold" data-i18n="currency_month">ج.م / شهر</span>
+                        </div>
+                    </div>
+                    <img src="https://i.postimg.cc/VJwfT9dV/pro.png" class="w-12 h-12 object-contain">
                 </div>
                 <div class="h-px bg-gray-100 my-4"></div>
-                <ul class="space-y-3">
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 1000 رسالة شهرياً</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط 5 حسابات</li>
-                    <li class="flex items-center gap-2 text-xs text-gray-600 font-medium"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> إرسال ريكوردات (Audio)</li>
+                <ul class="space-y-3 text-xs">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> 1000 رسالة شهرياً</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-500"></i> ربط 5 حسابات</li>
                 </ul>
-                <button class="w-full py-3 btn-gradient rounded-xl mt-6 font-bold text-white active:scale-95">اشترِ الآن</button>
-            </div>
-
-            <!-- الخطة 3 -->
-            <div class="card-faded p-6 bg-slate-900 text-white border-none">
-                <h3 class="text-xl font-bold">المؤسسات</h3>
-                <p class="text-xs text-slate-400 mt-2">للحصول على خطة مخصصة بالكامل تواصل مع فريق المبيعات.</p>
-                <a href="https://wa.me/201015186799" target="_blank" class="block w-full py-4 bg-green-500 text-white rounded-xl mt-6 font-bold text-center active:scale-95">تواصل عبر واتساب</a>
+                <button onclick="subscribe('pro')" class="w-full mt-6 active:scale-95 transition">
+                    <img src="https://i.postimg.cc/HrmYK0Vw/tpro.png" class="w-full h-14 object-contain">
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- صفحة QR والتكاملات -->
-    <div id="qr-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="closeQR()"></i>
-            <span class="flex-grow text-center font-bold">ربط حساب واتساب</span>
+    <!-- صفحة المهام المجدولة -->
+    <div id="schedule-page" class="page bg-white dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-inherit z-10">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold" data-i18n="scheduled_tasks">المهام المجدولة</span>
             <div class="w-6"></div>
         </header>
-        <main class="p-10 flex flex-col items-center justify-center qr-scanner-bg min-h-[80vh]">
-            <div class="p-6 bg-white rounded-[40px] shadow-2xl border-8 border-gray-50 mb-8 animate-pulse">
+        
+        <div class="flex p-2 bg-gray-100 dark:bg-slate-800 m-4 rounded-2xl gap-1">
+            <button onclick="switchTaskTab('create')" id="tab-create" class="tab-btn active flex-grow py-3 rounded-xl text-[10px] font-bold transition" data-i18n="create_task">إنشاء مهمة</button>
+            <button onclick="switchTaskTab('pending')" id="tab-pending" class="tab-btn flex-grow py-3 rounded-xl text-[10px] font-bold transition" data-i18n="pending">قيد الانتظار</button>
+            <button onclick="switchTaskTab('completed')" id="tab-completed" class="tab-btn flex-grow py-3 rounded-xl text-[10px] font-bold transition" data-i18n="completed">المنجزة</button>
+        </div>
+
+        <main class="p-6 pt-2">
+            <div id="task-section-create" class="task-section space-y-6">
+                <input type="tel" id="task-phone" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 outline-none" placeholder="رقم المستلم">
+                <div class="grid grid-cols-3 gap-3">
+                    <input type="number" id="task-hour" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center outline-none" placeholder="ساعة">
+                    <input type="number" id="task-minute" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center outline-none" placeholder="دقيقة">
+                    <input type="number" id="task-second" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center outline-none" placeholder="ثانية">
+                </div>
+                <input type="date" id="task-date" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 outline-none">
+                <button id="save-task-btn" class="w-full py-5 btn-gradient text-white font-black rounded-2xl active:scale-95" data-i18n="save_task">حفظ المهمة</button>
+            </div>
+            <div id="task-section-pending" class="task-section hidden space-y-4"><div id="pending-tasks-list"></div></div>
+            <div id="task-section-completed" class="task-section hidden space-y-4"><div id="completed-tasks-list"></div></div>
+        </main>
+    </div>
+
+    <!-- صفحة تخصيص Afnan -->
+    <div id="customize-page" class="page bg-white dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b sticky top-0 bg-inherit">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold" data-i18n="customize_afnan">تخصيص Afnan</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-6 space-y-6">
+            <input type="text" id="custom-name" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 outline-none" placeholder="اسم المعرفة">
+            <input type="text" id="custom-keywords" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 outline-none" placeholder="كلمات مفتاحية">
+            <textarea id="custom-content" class="w-full bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 outline-none h-40" placeholder="المحتوى التعليمي"></textarea>
+            <button id="save-custom-btn" class="w-full py-5 bg-gray-800 text-white font-black rounded-2xl active:scale-95" data-i18n="save_changes">حفظ التغييرات</button>
+        </main>
+    </div>
+
+    <!-- صفحة QR -->
+    <div id="qr-page" class="page bg-white dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b bg-inherit">
+            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
+            <span class="flex-grow text-center font-bold" data-i18n="integrations">التكاملات</span>
+            <div class="w-6"></div>
+        </header>
+        <main class="p-10 flex flex-col items-center justify-center min-h-[80vh]">
+            <div class="p-6 bg-white rounded-[40px] shadow-2xl border-8 border-gray-50 mb-8">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect" id="qr-image" class="w-64 h-64">
             </div>
             <div class="flex items-center gap-3 px-4 py-2 bg-blue-50 rounded-full mb-10">
                 <div class="w-2 h-2 bg-blue-600 rounded-full animate-ping"></div>
                 <span class="text-xs font-bold text-blue-600">تحديث الكود خلال: <span id="qr-timer">60</span> ثانية</span>
             </div>
-            <div class="w-full space-y-3">
-                <button class="w-full py-4 bg-green-600 text-white font-black rounded-2xl shadow-xl active:scale-95 transition">بدء الاتصال</button>
-                <button class="w-full py-4 text-gray-400 font-bold" onclick="closeQR()">إلغاء العملية</button>
-            </div>
-        </main>
-    </div>
-
-    <!-- صفحات السياسات والخصوصية -->
-    <div id="privacy-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">سياسة الخصوصية</span>
-            <div class="w-6"></div>
-        </header>
-        <div class="p-6 prose text-xs text-gray-500 leading-loose">
-            <p class="font-bold text-gray-800 mb-4">نحن نأخذ خصوصيتك على محمل الجد.</p>
-            <p>عند استخدام Afnan، فإننا نقوم بتشفير جميع البيانات الخاصة بك. لا يتم حفظ رسائل الواتساب الخاصة بك في خوادمنا بل يتم تمريرها فقط عبر التكاملات المشفرة. يحق لنا جمع بيانات الاستخدام العامة لتحسين جودة النموذج الذكي.</p>
-            <p class="mt-4">نحن لا نشارك بريدك الإلكتروني أو بيانات ربط الحسابات مع أي طرف ثالث تحت أي ظرف من الظروف.</p>
-        </div>
-    </div>
-
-    <div id="terms-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">اتفاقية المستخدم</span>
-            <div class="w-6"></div>
-        </header>
-        <div class="p-6 text-xs text-gray-500 leading-loose">
-            <p class="font-bold text-gray-800 mb-4">باستخدامك للتطبيق أنت توافق على:</p>
-            <ul class="list-disc pr-4 space-y-2">
-                <li>عدم استخدام الخدمة لإرسال رسائل مزعجة (Spam).</li>
-                <li>تحمل المسؤولية الكاملة عن المحتوى الذي تتم جدولته.</li>
-                <li>احترام سياسة واتساب الرسمية في التعامل مع الحسابات.</li>
-                <li>أن رصيد النقاط غير قابل للاسترجاع بعد استخدامه.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- صفحة المهام المجدولة -->
-    <div id="schedule-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white z-10">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">المهام المجدولة</span>
-            <div class="w-6"></div>
-        </header>
-        
-        <!-- Tabs -->
-        <div class="flex p-2 bg-gray-100 m-4 rounded-2xl gap-1">
-            <button onclick="switchTaskTab('create')" id="tab-create" class="tab-btn active flex-grow py-3 rounded-xl text-xs font-bold transition">إنشاء مهمة</button>
-            <button onclick="switchTaskTab('pending')" id="tab-pending" class="tab-btn flex-grow py-3 rounded-xl text-xs font-bold transition">قيد الانتظار</button>
-            <button onclick="switchTaskTab('completed')" id="tab-completed" class="tab-btn flex-grow py-3 rounded-xl text-xs font-bold transition">المنجزة</button>
-        </div>
-
-        <main class="p-6 pt-2">
-            <!-- قسم إنشاء مهمة -->
-            <div id="task-section-create" class="task-section space-y-6">
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">رقم المستلم</label>
-                    <input type="tel" id="task-phone" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none focus:border-blue-500" placeholder="+20 100 000 0000">
-                </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ساعة</label>
-                        <input type="number" id="task-hour" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">دقيقة</label>
-                        <input type="number" id="task-minute" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">ثانية</label>
-                        <input type="number" id="task-second" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center outline-none">
-                    </div>
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">تاريخ الإرسال</label>
-                    <input type="date" id="task-date" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none">
-                </div>
-                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <span class="text-sm font-bold text-gray-700">تكرار هذه المهمة يومياً؟</span>
-                    <input type="checkbox" id="task-repeat" class="w-5 h-5 accent-blue-600 rounded">
-                </div>
-                <button id="save-task-btn" class="w-full py-5 btn-gradient text-white font-black rounded-2xl mt-4 active:scale-95">حفظ المهمة</button>
-            </div>
-
-            <!-- قسم المهام قيد الانتظار -->
-            <div id="task-section-pending" class="task-section hidden space-y-4">
-                <div id="pending-tasks-list" class="space-y-3">
-                    <!-- سيتم تحميل المهام هنا -->
-                </div>
-            </div>
-
-            <!-- قسم المهام المنجزة -->
-            <div id="task-section-completed" class="task-section hidden space-y-4">
-                <div id="completed-tasks-list" class="space-y-3">
-                    <!-- سيتم تحميل المهام هنا -->
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- صفحة تخصيص Afnan -->
-    <div id="customize-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b sticky top-0 bg-white">
-            <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">تخصيص Afnan الذكي</span>
-            <div class="w-6"></div>
-        </header>
-        <main class="p-6 space-y-6">
-            <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-100">
-                <p class="text-[10px] text-emerald-700 leading-relaxed">هنا يمكنك تعليم Afnan كيف يرد على عملائك وما هي القواعد التي يجب اتباعها.</p>
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">اسم المعرفة</label>
-                <input type="text" id="custom-name" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: الرد الترحيبي">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">استخدم عندما (كلمات مفتاحية) *</label>
-                <input type="text" id="custom-keywords" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none" placeholder="مثلاً: السلام عليكم، أهلاً، مرحباً">
-            </div>
-            <div>
-                <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block">المحتوى التعليمي *</label>
-                <textarea id="custom-content" class="w-full bg-gray-50 border border-gray-100 rounded-2xl p-4 outline-none h-40" placeholder="اكتب التعليمات التي يجب أن يتبعها البوت هنا..."></textarea>
-            </div>
-            <button id="save-custom-btn" class="w-full py-5 bg-gray-800 text-white font-black rounded-2xl mt-4 active:scale-95">حفظ التغييرات</button>
+            <button class="w-full py-4 bg-green-600 text-white font-black rounded-2xl shadow-xl active:scale-95 transition" data-i18n="start_connection">بدء الاتصال</button>
         </main>
     </div>
 
     <!-- صفحة الملف الشخصي -->
-    <div id="profile-page" class="page bg-white min-h-screen">
-        <header class="p-5 flex items-center border-b">
+    <div id="profile-page" class="page bg-white dark:bg-slate-900 min-h-screen">
+        <header class="p-5 flex items-center border-b bg-inherit">
             <i data-lucide="chevron-right" class="w-6 h-6 cursor-pointer" onclick="showPage('home-page')"></i>
-            <span class="flex-grow text-center font-bold">حسابي الشخصي</span>
+            <span class="flex-grow text-center font-bold" data-i18n="user_account">حسابي الشخصي</span>
             <div class="w-6"></div>
         </header>
         <main class="p-6 flex flex-col items-center">
-            <div class="relative group cursor-pointer">
-                <div class="w-28 h-28 rounded-full border-8 border-gray-50 shadow-inner overflow-hidden">
-                    <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff&size=200" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full border-4 border-white">
-                    <i data-lucide="pencil" class="w-3 h-3"></i>
-                </div>
+            <div class="w-28 h-28 rounded-full border-8 border-gray-50 shadow-inner overflow-hidden">
+                <img id="profile-avatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff&size=200" class="w-full h-full object-cover">
             </div>
             <div class="w-full mt-10 space-y-3">
-                <div class="flex flex-col gap-1 px-2">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase">الاسم الكامل</span>
-                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold flex justify-between">
-                        <span id="profile-name">...</span>
-                        <i data-lucide="edit-3" class="w-4 h-4 text-gray-300"></i>
-                    </div>
+                <div class="w-full p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl font-bold flex justify-between">
+                    <span id="profile-name">...</span>
                 </div>
-                <div class="flex flex-col gap-1 px-2">
-                    <span class="text-[10px] text-gray-400 font-bold uppercase">البريد الإلكتروني</span>
-                    <div class="w-full p-4 bg-gray-50 rounded-2xl font-bold text-gray-400">
-                        <span id="profile-email">...</span>
-                    </div>
+                <div class="w-full p-4 bg-gray-50 dark:bg-slate-800 rounded-2xl font-bold text-gray-400">
+                    <span id="profile-email">...</span>
                 </div>
             </div>
-            <div class="w-full mt-10 space-y-3 px-2">
-                <button id="delete-account-btn" class="w-full py-4 text-red-500 font-bold bg-red-50 rounded-2xl border border-red-100 flex items-center justify-center gap-2">
-                    <i data-lucide="user-minus" class="w-5 h-5"></i> حذف الحساب
-                </button>
-                <button id="logout-btn" class="w-full py-4 text-gray-500 font-bold bg-white rounded-2xl border border-gray-100 flex items-center justify-center gap-2">
-                    <i data-lucide="log-out" class="w-5 h-5"></i> تسجيل الخروج
-                </button>
-            </div>
+            <button id="logout-btn" class="w-full mt-10 py-4 text-gray-500 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 flex items-center justify-center gap-2">
+                <i data-lucide="log-out" class="w-5 h-5"></i> <span data-i18n="logout">تسجيل الخروج</span>
+            </button>
         </main>
     </div>
 
@@ -455,11 +376,43 @@
         import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, deleteDoc, setDoc, getDocs } from './api.js';
         import { protectPage, navigateTo } from './router.js';
 
-        // Simplified protection
-        protectPage('main');
-
         lucide.createIcons();
         let currentUser = null;
+        let currentLang = 'ar';
+
+        const translations = {
+            ar: {
+                app_name: 'Afnan', loading: 'جاري التحميل...', balance: 'رصيدك', account_status: 'حالة الحساب',
+                user_account: 'حساب المستخدم', scheduled_tasks: 'المهام المجدولة', customize_afnan: 'تخصيص Afnan',
+                integrations: 'التكاملات', privacy_policy: 'سياسة الخصوصية', user_agreement: 'اتفاقية المستخدم',
+                customer_service: 'خدمة العملاء (واتساب)', online: 'متصل الآن', chat_welcome: 'أهلاً! أنا مساعدك الذكي Afnan، كيف يمكنني مساعدتك اليوم؟',
+                notifications: 'الإشعارات', choose_plan: 'اختر خطتك', basic_plan: 'الأساسية', pro_plan: 'الاحترافية',
+                currency_month: 'ج.م / شهر', create_task: 'إنشاء مهمة', pending: 'قيد الانتظار', completed: 'المنجزة',
+                save_task: 'حفظ المهمة', save_changes: 'حفظ التغييرات', start_connection: 'بدء الاتصال', logout: 'تسجيل الخروج'
+            },
+            en: {
+                app_name: 'Afnan', loading: 'Loading...', balance: 'Balance', account_status: 'Account Status',
+                user_account: 'User Account', scheduled_tasks: 'Scheduled Tasks', customize_afnan: 'Customize Afnan',
+                integrations: 'Integrations', privacy_policy: 'Privacy Policy', user_agreement: 'User Agreement',
+                customer_service: 'Customer Service', online: 'Online', chat_welcome: 'Hello! I am Afnan, your AI assistant. How can I help you today?',
+                notifications: 'Notifications', choose_plan: 'Choose Plan', basic_plan: 'Basic', pro_plan: 'Professional',
+                currency_month: 'EGP / Month', create_task: 'Create Task', pending: 'Pending', completed: 'Completed',
+                save_task: 'Save Task', save_changes: 'Save Changes', start_connection: 'Start Connection', logout: 'Logout'
+            }
+        };
+
+        window.toggleLanguage = function() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                el.innerText = translations[currentLang][el.getAttribute('data-i18n')];
+            });
+        };
+
+        window.toggleDarkMode = function() {
+            document.body.classList.toggle('dark-mode');
+        };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -473,48 +426,89 @@
         });
 
         async function syncUserData(uid) {
-            const updateUI = (data) => {
-                document.getElementById('user-name').innerText = data.displayName || 'مستخدم';
-                document.getElementById('user-email').innerText = data.email || '';
-                document.getElementById('profile-name').innerText = data.displayName || 'مستخدم';
-                document.getElementById('profile-email').innerText = data.email || '';
-                if (data.photoURL) {
-                    document.getElementById('user-avatar').src = data.photoURL;
-                    document.getElementById('profile-avatar').src = data.photoURL;
-                }
-                if (data.balance !== undefined) document.getElementById('user-balance').innerText = data.balance;
-                if (data.subscription !== undefined) {
-                    document.getElementById('user-subscription').innerText = data.subscription === 'free' ? 'اشترك الآن' : 'مشترك (' + data.subscription + ')';
-                }
-            };
-
-            if (currentUser) {
-                updateUI({
-                    displayName: currentUser.displayName,
-                    email: currentUser.email,
-                    photoURL: currentUser.photoURL
-                });
-            }
-
             const userRef = doc(db, "users", uid);
-            onSnapshot(userRef, async (docSnap) => {
+            onSnapshot(userRef, (docSnap) => {
                 if (docSnap.exists()) {
-                    updateUI(docSnap.data());
-                } else {
-                    const userData = {
-                        uid: currentUser.uid,
-                        displayName: currentUser.displayName || 'مستخدم',
-                        email: currentUser.email || '',
-                        photoURL: currentUser.photoURL || '',
-                        balance: 20,
-                        subscription: "free",
-                        lastLogin: new Date().toISOString(),
-                        createdAt: new Date().toISOString()
-                    };
-                    await setDoc(userRef, userData);
+                    const data = docSnap.data();
+                    document.getElementById('user-name').innerText = data.displayName || 'User';
+                    document.getElementById('user-email').innerText = data.email || '';
+                    document.getElementById('profile-name').innerText = data.displayName || 'User';
+                    document.getElementById('profile-email').innerText = data.email || '';
+                    document.getElementById('user-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=User';
+                    document.getElementById('profile-avatar').src = data.photoURL || 'https://ui-avatars.com/api/?name=User';
+                    document.getElementById('user-balance').innerText = data.balance || 0;
+                    
+                    const subBadge = document.getElementById('sub-icon-badge');
+                    const subBtnImg = document.getElementById('sub-btn-img');
+                    
+                    if (data.subscription === 'pro') {
+                        subBadge.src = 'https://i.postimg.cc/VJwfT9dV/pro.png';
+                        subBadge.classList.remove('hidden');
+                        subBtnImg.src = 'https://i.postimg.cc/HrmYK0VR/pls.png';
+                        document.getElementById('user-subscription').innerText = 'PRO';
+                    } else if (data.subscription === 'co') {
+                        subBadge.src = 'https://i.postimg.cc/jDTx96D0/co.png';
+                        subBadge.classList.remove('hidden');
+                        subBtnImg.src = 'https://i.postimg.cc/HrmYK0VR/pls.png';
+                        document.getElementById('user-subscription').innerText = 'CO';
+                    } else {
+                        subBadge.classList.add('hidden');
+                        subBtnImg.src = 'https://i.postimg.cc/HrmYK0VR/pls.png';
+                        document.getElementById('user-subscription').innerText = currentLang === 'ar' ? 'اشترك الآن' : 'Subscribe';
+                    }
                 }
             });
         }
+
+        window.subscribe = async function(plan) {
+            if (!currentUser) return;
+            await updateDoc(doc(db, "users", currentUser.uid), { subscription: plan });
+            showToast();
+            showPage('home-page');
+        };
+
+        function showToast() {
+            const toast = document.getElementById('success-toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+
+        window.showPage = function(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            window.scrollTo(0,0);
+            lucide.createIcons();
+        };
+
+        window.switchTaskTab = function(tabId) {
+            document.querySelectorAll('.task-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`task-section-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        };
+
+        document.getElementById('save-task-btn').addEventListener('click', async () => {
+            const phone = document.getElementById('task-phone').value;
+            const date = document.getElementById('task-date').value;
+            if (!phone || !date) return alert('يرجى إكمال البيانات');
+            await addDoc(collection(db, "tasks"), {
+                userId: currentUser.uid, phone, date, status: 'pending', createdAt: new Date().toISOString()
+            });
+            showToast();
+            switchTaskTab('pending');
+        });
+
+        document.getElementById('save-custom-btn').addEventListener('click', async () => {
+            const name = document.getElementById('custom-name').value;
+            const keywords = document.getElementById('custom-keywords').value;
+            const content = document.getElementById('custom-content').value;
+            if (!name || !keywords || !content) return alert('يرجى إكمال البيانات');
+            await addDoc(collection(db, "customizations"), {
+                userId: currentUser.uid, name, keywords, content, createdAt: new Date().toISOString()
+            });
+            showToast();
+            showPage('home-page');
+        });
 
         async function syncNotifications(uid) {
             const q = query(collection(db, "notifications"), where("userId", "in", [uid, "all"]));
@@ -523,21 +517,15 @@
                 const badge = document.getElementById('notif-badge');
                 list.innerHTML = '';
                 let unreadCount = 0;
-
                 snapshot.docs.forEach(doc => {
                     const data = doc.data();
                     if (!data.read) unreadCount++;
                     list.innerHTML += `
-                        <div class="p-4 ${data.read ? 'bg-gray-50' : 'bg-blue-50 border border-blue-100'} rounded-2xl flex gap-3">
-                            <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0"></i>
-                            <div>
-                                <p class="text-xs font-bold text-gray-700">${data.title}</p>
-                                <p class="text-[10px] text-gray-500 leading-relaxed">${data.body}</p>
-                            </div>
-                        </div>
-                    `;
+                        <div class="p-4 ${data.read ? 'bg-gray-50' : 'bg-blue-50 dark:bg-slate-800 border border-blue-100'} rounded-2xl flex gap-3">
+                            <i data-lucide="info" class="w-5 h-5 text-blue-600"></i>
+                            <div><p class="text-xs font-bold">${data.title}</p><p class="text-[10px] text-gray-500">${data.body}</p></div>
+                        </div>`;
                 });
-                
                 if (unreadCount > 0) badge.classList.remove('hidden');
                 else badge.classList.add('hidden');
                 lucide.createIcons();
@@ -549,126 +537,27 @@
             onSnapshot(q, (snapshot) => {
                 const pendingList = document.getElementById('pending-tasks-list');
                 const completedList = document.getElementById('completed-tasks-list');
-                pendingList.innerHTML = '';
-                completedList.innerHTML = '';
-
+                pendingList.innerHTML = ''; completedList.innerHTML = '';
                 snapshot.docs.forEach(doc => {
                     const data = doc.data();
-                    const taskHtml = `
-                        <div class="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm flex justify-between items-center">
-                            <div>
-                                <p class="text-xs font-bold text-gray-800">${data.phone}</p>
-                                <p class="text-[10px] text-gray-400 mt-1">${data.date} | ${data.time}</p>
-                            </div>
-                            <span class="px-3 py-1 rounded-full text-[10px] font-bold ${data.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">
-                                ${data.status === 'completed' ? 'منجزة' : 'قيد الانتظار'}
-                            </span>
-                        </div>
-                    `;
-                    if (data.status === 'completed') completedList.innerHTML += taskHtml;
-                    else pendingList.innerHTML += taskHtml;
+                    const html = `<div class="p-4 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl mb-2 flex justify-between items-center">
+                        <div><p class="text-xs font-bold">${data.phone}</p><p class="text-[10px] text-gray-400">${data.date}</p></div>
+                        <span class="px-2 py-1 rounded-full text-[8px] font-bold ${data.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${data.status}</span>
+                    </div>`;
+                    if (data.status === 'completed') completedList.innerHTML += html;
+                    else pendingList.innerHTML += html;
                 });
-                
-                if (pendingList.innerHTML === '') pendingList.innerHTML = '<p class="text-center text-xs text-gray-400 py-10">لا توجد مهام قيد الانتظار</p>';
-                if (completedList.innerHTML === '') completedList.innerHTML = '<p class="text-center text-xs text-gray-400 py-10">لا توجد مهام منجزة</p>';
             });
         }
 
-        window.showPage = function(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0,0);
-            lucide.createIcons();
-            if(pageId === 'qr-page') startQRTimer();
-        };
-
-        window.switchTaskTab = function(tabId) {
-            document.querySelectorAll('.task-section').forEach(s => s.classList.add('hidden'));
-            document.getElementById(`task-section-${tabId}`).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-        };
-
-        let qrInterval;
-        window.closeQR = function() {
-            clearInterval(qrInterval);
-            showPage('home-page');
-        };
-
-        function startQRTimer() {
-            let timeLeft = 60;
-            const timerEl = document.getElementById('qr-timer');
-            const qrImg = document.getElementById('qr-image');
-            clearInterval(qrInterval);
-            qrInterval = setInterval(() => {
-                timeLeft--;
-                timerEl.innerText = timeLeft;
-                if(timeLeft <= 0) {
-                    timeLeft = 60;
-                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=AfnanConnect-${Date.now()}`;
-                }
-            }, 1000);
-        }
-
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            await signOut(auth);
-            navigateTo('login');
-        });
-
-        document.getElementById('delete-account-btn').addEventListener('click', async () => {
-            if (confirm('هل أنت متأكد من حذف حسابك نهائياً؟')) {
-                await deleteDoc(doc(db, "users", currentUser.uid));
-                await currentUser.delete();
-                navigateTo('login');
-            }
-        });
-
-        document.getElementById('save-task-btn').addEventListener('click', async () => {
-            const phone = document.getElementById('task-phone').value;
-            const hour = document.getElementById('task-hour').value;
-            const minute = document.getElementById('task-minute').value;
-            const second = document.getElementById('task-second').value;
-            const date = document.getElementById('task-date').value;
-            const repeat = document.getElementById('task-repeat').checked;
-
-            if (!phone || !date) return alert('يرجى إكمال البيانات');
-
-            await addDoc(collection(db, "tasks"), {
-                userId: currentUser.uid,
-                phone, time: `${hour}:${minute}:${second}`, date, repeat,
-                status: 'pending', createdAt: new Date().toISOString()
-            });
-            alert('تم حفظ المهمة بنجاح');
-            switchTaskTab('pending');
-        });
-
-        document.getElementById('save-custom-btn').addEventListener('click', async () => {
-            const name = document.getElementById('custom-name').value;
-            const keywords = document.getElementById('custom-keywords').value;
-            const content = document.getElementById('custom-content').value;
-
-            if (!name || !keywords || !content) return alert('يرجى إكمال البيانات');
-
-            await addDoc(collection(db, "customizations"), {
-                userId: currentUser.uid, name, keywords, content,
-                createdAt: new Date().toISOString()
-            });
-            alert('تم حفظ التخصيص بنجاح');
-            showPage('home-page');
-        });
-
-        document.getElementById('send-chat-btn').addEventListener('click', async () => {
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => navigateTo('login')));
+        document.getElementById('send-chat-btn').addEventListener('click', () => {
             const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-            const chatBox = document.getElementById('chat-messages');
-            chatBox.innerHTML += `<div class="chat-bubble user-msg">${msg}</div>`;
+            if (!input.value.trim()) return;
+            const box = document.getElementById('chat-messages');
+            box.innerHTML += `<div class="chat-bubble user-msg">${input.value}</div>`;
             input.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-            setTimeout(() => {
-                chatBox.innerHTML += `<div class="chat-bubble bot-msg">جاري معالجة طلبك عبر Afnan AI...</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1000);
+            box.scrollTop = box.scrollHeight;
         });
     </script>
 </body>
