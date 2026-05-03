@@ -455,7 +455,8 @@
         import { auth, db, onAuthStateChanged, signOut, doc, onSnapshot, updateDoc, collection, addDoc, query, where, deleteDoc, setDoc, getDocs } from './api.js';
         import { protectPage, navigateTo } from './router.js';
 
-        if (!protectPage('main')) {}
+        // Simplified protection
+        protectPage('main');
 
         lucide.createIcons();
         let currentUser = null;

@@ -136,8 +136,8 @@
                     await setDoc(userRef, userData, { merge: true });
                 }
                 
-                // Direct navigation to main page with ID
-                window.location.href = 'afnan.html?id=app_v1_main_dashboard_secure_access_key_200';
+                // Direct navigation to main page
+                navigateTo('main');
             } catch (error) {
                 console.error("Login Error:", error);
                 alert("حدث خطأ أثناء تسجيل الدخول: " + error.message);
